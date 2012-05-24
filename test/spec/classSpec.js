@@ -1,5 +1,9 @@
 describe('Class module', function(){
     
+    afterEach(function(){
+    	Test = undefined;
+    });
+    
     it('should be able to create a class', function(){
         Class('Test', function(){});
         
@@ -90,5 +94,21 @@ describe('Class module', function(){
         expect(function(){
             test.getFoo();
         }).toThrow('Type Reference Error');
+    });
+    
+    it('should be able to create Constants', function(){
+    	Class('Test', function(){
+    		this.privateProperty('string', 'foo', 'bar');
+            
+            this.publicMethod('string', 'getFoo', function(){
+                return this.foo;
+            });
+        }, function(){
+        	this.constants('string', 'FOO', 'BAR');
+        });
+        var test = new Test();
+        expect(Test.FOO).toEqual('BAR');
+        
+        expect(test.getFoo()).toEqual('bar');
     });
 });
