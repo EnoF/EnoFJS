@@ -9,7 +9,7 @@ describe('Class module', function(){
     
     it('should be able to create a class with a public method', function(){
         Class('Test', function(){
-            this.publicMethod('getFoo', function(){
+            this.publicMethod('boolean', 'getFoo', function(){
                 return true;
             });
         });
@@ -22,7 +22,7 @@ describe('Class module', function(){
         Class('Test', function(){
             this.privateProperty('blaat', 'foo', true);
             
-            this.publicMethod('getFoo', function(){
+            this.publicMethod('blaat', 'getFoo', function(){
                 return this.foo;
             });
         });
@@ -35,7 +35,7 @@ describe('Class module', function(){
         Class('Test', function(){
             this.privateProperty('boolean', 'foo', true);
             
-            this.publicMethod('getFoo', function(){
+            this.publicMethod('boolean', 'getFoo', function(){
                 return this.foo;
             });
         });
@@ -48,16 +48,47 @@ describe('Class module', function(){
         Class('Test', function(){
             this.privateProperty('boolean', 'foo', false);
             
-            this.privateMethod('convertFoo', function(){
+            this.privateMethod('boolean', 'convertFoo', function(){
                 return !this.foo;
             });
             
-            this.publicMethod('getFoo', function(){
+            this.publicMethod('boolean', 'getFoo', function(){
                 return this.convertFoo();
             });
         });
         
         var test = new Test();
         expect(test.getFoo()).toEqual(true);
+    });
+    
+    it('should be able to access a public variable through a private function', function(){
+    	Class('Test', function(){
+    		this.publicProperty('string', 'foo', 'bar');
+    		
+    		this.privateMethod('string', 'getFoo', function(){
+    			return this.foo;
+    		});
+    		
+    		this.publicMethod('string', 'sayHello', function(){
+    			return "Hi " + this.getFoo();
+    		});
+    	});
+    	
+    	var test = new Test();
+    	expect(test.sayHello()).toEqual("Hi bar");
+    });
+    
+    it('should throw an type reference error when returning a value of different type', function(){
+    	Class('Test', function(){
+            this.privateProperty('string', 'foo', 'bar');
+            
+            this.publicMethod('blaat', 'getFoo', function(){
+                return this.foo;
+            });
+        });
+        var test = new Test();
+        expect(function(){
+            test.getFoo();
+        }).toThrow('Type Reference Error');
     });
 });
