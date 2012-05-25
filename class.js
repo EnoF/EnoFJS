@@ -2,55 +2,29 @@
  * Define a class
  * @param {String} namespace
  * @param {Function} classDefinition
+ * @param {Function} classConstants
  */
 function Class(namespace, classDefinition, classConstants){
 	var _Instance,
-		/**
-		 * the name space split into resolvable pieces
-		 * @type {Array:String}
-		 */
-		_nameSpace = namespace.split('.'),
-		/**
-		 * the key for the namespace loop
-		 * @type {String}
-		 */
-		_ns,
-		/**
-		 * the pointer for our namespace
-		 * @type {Object}
-		 */
-		_currentNameSpace = this,	
-		/** 
-		 * the last entry of our namespace is our class name 
-		 * @type {String}
-		 */
-		_className = _nameSpace.pop();
-	
-	/**
-	 * Resolve the namespace
-	 */
-	for(_ns in _nameSpace){
-		if(typeof(_currentNameSpace[_nameSpace[_ns]]) === "undefined"){
-			_currentNameSpace[_nameSpace[_ns]] = {};
-		}
-		_currentNameSpace = _currentNameSpace[_nameSpace[_ns]];
-	}
+		_resolvedNameSpace = resolveNameSpace(namespace),
+		_currentNameSpace = _resolvedNameSpace.currentNameSpace,
+		_currentClass = _resolvedNameSpace.currentClass;
 	
 	/**
 	 * Check if the class doesn't exist already
 	 * @throws Class already exists
 	 */
-	if(_currentNameSpace[_className]){
+	if(_currentNameSpace[_currentClass]){
 		throw {
 			message : "Class already exists",
-			reason : "Class " + className + " already exists"
+			reason : "Class " + _currentClass + " already exists"
 		};
 	}
     
     /**
      * new Class constructor
      */
-    _Instance = _currentNameSpace[_className] = function(){
+    _Instance = _currentNameSpace[_currentClass] = function(){
         /**
          * Class representable
          * This is the representable class, this will allow us to extend in the future
@@ -128,6 +102,48 @@ function Class(namespace, classDefinition, classConstants){
     };
     
     /**
+     * Resolve the name space
+     * @param {String} namespace
+     * @return {Object} returns the namespace and the class
+     */
+    function resolveNameSpace(namespace){
+    	/**
+		 * the name space split into resolvable pieces
+		 * @type {Array:String}
+		 */
+		var _nameSpace = namespace.split('.'),
+		/**
+		 * the key for the namespace loop
+		 * @type {String}
+		 */
+		_ns,
+		/**
+		 * the pointer for our namespace
+		 * @type {Object}
+		 */
+		_currentNameSpace = this,	
+		/** 
+		 * the last entry of our namespace is our class name 
+		 * @type {String}
+		 */
+		_className = _nameSpace.pop();
+	
+		/**
+		 * Resolve the namespace
+		 */
+		for(_ns in _nameSpace){
+			if(typeof(_currentNameSpace[_nameSpace[_ns]]) === "undefined"){
+				_currentNameSpace[_nameSpace[_ns]] = {};
+			}
+			_currentNameSpace = _currentNameSpace[_nameSpace[_ns]];
+		}
+		return {
+			currentNameSpace : _currentNameSpace,
+			currentClass : _className
+		};
+    }
+    
+    /**
      * Check if the value is of the given type
 	 * @param {String|Class} value The value to be validated
 	 * @param {Object} type The type the value should be
@@ -170,5 +186,4 @@ function Class(namespace, classDefinition, classConstants){
 	    	classConstants.call(this);
 	    }
     }());
-    
 }
