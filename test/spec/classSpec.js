@@ -82,6 +82,27 @@ describe('Class module', function(){
     	expect(test.sayHello()).toEqual("Hi bar");
     });
     
+    it('should be able to pass parameters to constructors', function(){
+    	Class('Test', function(bar){
+    		this.publicProperty('string', 'foo', bar);
+    		
+    		this.privateMethod('string', 'getFoo', function(){
+    			return this.foo;
+    		});
+    		
+    		this.publicMethod('string', 'sayHello', function(){
+    			return "Hi " + this.getFoo();
+    		});
+    	});
+    	
+    	try{
+    		var test = new Test('bar');
+    	}catch(e){
+    		console.error(e);
+    	}
+    	expect(test.sayHello()).toEqual("Hi bar");
+    });
+    
     it('should throw an type reference error when returning a value of different type', function(){
     	Class('Test', function(){
             this.privateProperty('string', 'foo', 'bar');

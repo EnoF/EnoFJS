@@ -113,7 +113,7 @@ function Class(namespace, classDefinition, classConstants){
         };
         
         // Set the this object for the class definition
-        classDefinition.call(this);
+        classDefinition.apply(this, arguments);
         
         // The constants can't be adjusted once created
         if(Object.freeze){
