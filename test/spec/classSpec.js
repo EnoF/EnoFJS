@@ -111,4 +111,18 @@ describe('Class module', function(){
         
         expect(test.getFoo()).toEqual('bar');
     });
+    
+    it('should be able to create a class inside a package', function(){
+    	Class('com.provictores.Test', function(){
+    		this.privateProperty('string', 'foo', 'bar');
+            
+            this.publicMethod('string', 'getFoo', function(){
+                return this.foo;
+            });
+        }, function(){
+        	this.constants('string', 'FOO', 'BAR');
+        });
+        
+        expect(new com.provictores.Test() instanceof com.provictores.Test).toEqual(true);
+    });
 });

@@ -1,16 +1,56 @@
 /**
  * Define a class
- * @param {String} className
+ * @param {String} namespace
  * @param {Function} classDefinition
  */
-function Class(className, classDefinition, classConstants){
-	if(window[className]){
+function Class(namespace, classDefinition, classConstants){
+	var _Instance,
+		/**
+		 * the name space split into resolvable pieces
+		 * @type {Array:String}
+		 */
+		_nameSpace = namespace.split('.'),
+		/**
+		 * the key for the namespace loop
+		 * @type {String}
+		 */
+		_ns,
+		/**
+		 * the pointer for our namespace
+		 * @type {Object}
+		 */
+		_currentNameSpace = this,	
+		/** 
+		 * the last entry of our namespace is our class name 
+		 * @type {String}
+		 */
+		_className = _nameSpace.pop();
+	
+	/**
+	 * Resolve the namespace
+	 */
+	for(_ns in _nameSpace){
+		if(typeof(_currentNameSpace[_nameSpace[_ns]]) === "undefined"){
+			_currentNameSpace[_nameSpace[_ns]] = {};
+		}
+		_currentNameSpace = _currentNameSpace[_nameSpace[_ns]];
+	}
+	
+	/**
+	 * Check if the class doesn't exist already
+	 * @throws Class already exists
+	 */
+	if(_currentNameSpace[_className]){
 		throw {
 			message : "Class already exists",
 			reason : "Class " + className + " already exists"
 		};
 	}
-    var _Instance = window[className] = function(){
+    
+    /**
+     * new Class constructor
+     */
+    _Instance = _currentNameSpace[_className] = function(){
         /**
          * Class representable
          * This is the representable class, this will allow us to extend in the future
