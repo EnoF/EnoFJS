@@ -133,17 +133,45 @@ describe('Class module', function(){
         expect(test.getFoo()).toEqual('bar');
     });
     
-    it('should be able to create a class inside a package', function(){
-    	Class('com.provictores.Test', function(){
-    		this.privateProperty('string', 'foo', 'bar');
-            
-            this.publicMethod('string', 'getFoo', function(){
-                return this.foo;
-            });
-        }, function(){
-        	this.constants('string', 'FOO', 'BAR');
-        });
-        
-        expect(new com.provictores.Test() instanceof com.provictores.Test).toEqual(true);
+    describe('Package module', function(){
+    	afterEach(function(){
+    		com.provictores.Test = undefined;
+    		com.provictores.Foo = undefined;
+    	});
+    	
+    	it('should be able to create a class inside a package', function(){
+	    	Class('com.provictores.Test', function(){
+	    		this.privateProperty('string', 'foo', 'bar');
+	            
+	            this.publicMethod('string', 'getFoo', function(){
+	                return this.foo;
+	            });
+	        }, function(){
+	        	this.constants('string', 'FOO', 'BAR');
+	        });
+	        
+	        expect(new com.provictores.Test() instanceof com.provictores.Test).toEqual(true);
+	    });
+	    
+	    it('should be able to access a class from another package', function(){
+	    	Class('com.provictores.Test', function(){
+	    		this.privateProperty('string', 'foo', 'bar');
+	            
+	            this.publicMethod('string', 'getFoo', function(){
+	                return this.foo;
+	            });
+	        }, function(){
+	        	this.constants('string', 'FOO', 'BAR');
+	        });
+	        
+	        Class('com.provictores.Foo', function(){
+	    		this.import('com.provictores.Test');
+	            
+	            this.publicProperty(this.Test, 'test', new this.Test());
+	        });
+	        
+	        expect(new com.provictores.Foo().test instanceof com.provictores.Test).toEqual(true);
+	    });
     });
+    
 });

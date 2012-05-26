@@ -32,6 +32,14 @@ function Class(namespace, classDefinition, classConstants){
          */
         var _class = {};
         
+        this.import = function(namespace){
+        	var _resolvedNameSpace = resolveNameSpace(namespace),
+				_currentNameSpace = _resolvedNameSpace.currentNameSpace,
+				_currentClass = _resolvedNameSpace.currentClass;
+				
+			this[_currentClass] = _currentNameSpace[_currentClass];
+        };
+        
         /**
          * Create a private property
          * Set this property into the class representable
@@ -95,6 +103,7 @@ function Class(namespace, classDefinition, classConstants){
         }
         // Remove the class creation methods from the created Class
         // We don't want to polute the classes we make
+        delete this.import;
         delete this.privateProperty;
         delete this.publicProperty;
         delete this.privateMethod;
