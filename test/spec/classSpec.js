@@ -137,6 +137,7 @@ describe('Class module', function(){
     	afterEach(function(){
     		com.provictores.Test = undefined;
     		com.provictores.Foo = undefined;
+    		com.provictores.Bar = undefined;
     	});
     	
     	it('should be able to create a class inside a package', function(){
@@ -171,6 +172,25 @@ describe('Class module', function(){
 	        });
 	        
 	        expect(new com.provictores.Foo().test instanceof com.provictores.Test).toEqual(true);
+	    });
+	    
+	    it('should be able to extend a class', function(){
+	    	Class('com.provictores.Foo', function(){
+	    		this.privateProperty('string', 'foo', 'bar');
+	            
+	            this.publicMethod('string', 'getFoo', function(){
+	                return this.foo;
+	            });
+	        });
+	        
+	        Class('com.provictores.Bar', function(){
+	        	this.import('com.provictores.Foo');
+	        	this.extends(this.Foo);
+	        });
+	        
+	        var bar = new com.provictores.Bar();
+	        console.debug("My class bar", bar);
+	        expect(bar.getFoo()).toEqual('bar');
 	    });
     });
     

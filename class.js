@@ -32,12 +32,47 @@ function Class(namespace, classDefinition, classConstants){
          */
         var _class = {};
         
+        /**
+         * Import a class to this class
+         * The class will be made available with this.class
+         */
         this.import = function(namespace){
         	var _resolvedNameSpace = resolveNameSpace(namespace),
 				_currentNameSpace = _resolvedNameSpace.currentNameSpace,
 				_currentClass = _resolvedNameSpace.currentClass;
 				
 			this[_currentClass] = _currentNameSpace[_currentClass];
+        };
+        
+        /**
+         * Extends a class
+         * @param extendClass the class this class should extend
+         */
+        this.extends = function(extendClass){
+        	var _extendClass = new extendClass();
+        	
+        	_extendClass.extend = function(newClass){
+	        	var _publicPropOrFunc;
+	        	
+	        	newClass.addPrivates(_class);
+	        	
+	        	delete _extendClass.extend;
+	        	
+	        	for(_publicPropOrFunc in this){
+	        		newClass[_publicPropOrFunc] = this[_publicPropOrFunc];
+	        	}
+	        };
+        	
+        	_extendClass.extend(this);
+        	delete this.extends;
+        };
+        
+        /**
+         * Add the private variables to this class
+         * @param {Object} the private variables of the extending class
+         */
+        this.addPrivates = function(privates){
+        	_class = privates;
         };
         
         /**
@@ -104,6 +139,7 @@ function Class(namespace, classDefinition, classConstants){
         // Remove the class creation methods from the created Class
         // We don't want to polute the classes we make
         delete this.import;
+        delete this.addPrivates;
         delete this.privateProperty;
         delete this.publicProperty;
         delete this.privateMethod;
