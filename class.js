@@ -30,7 +30,19 @@ function Class(namespace, classDefinition, classConstants){
          * This is the representable class, this will allow us to extend in the future
          * @type {Class}
          */
-        var _class = {};
+        var _class = {},
+        	_protected = {};
+        
+        /**
+         * Expose the class and protected in order to make the extention of this class possible
+         * @FIXME need a more elegant solution for this... But at this moment I have no idea how to do this
+         * more elegantly
+         * the properties will be deleted after the extention of the class
+         */
+        this.expose = function(){
+        	this.class = _class;
+        	this.protected = _protected;
+        };
         
         /**
          * Import a class to this class
@@ -51,12 +63,21 @@ function Class(namespace, classDefinition, classConstants){
         this.extends = function(extendClass){
         	var _extendClass = new extendClass();
         	
+        	_extendClass.expose();
+        	
         	_extendClass.extend = function(newClass){
 	        	var _publicPropOrFunc;
 	        	
-	        	newClass.addPrivates(_class);
+	        	newClass.addExtendedPrivates(this.class);
+	        	
+	        	newClass.addExtendedProtected(this.protected);
 	        	
 	        	delete _extendClass.extend;
+	        	/**
+	        	 * @FIXME Delete the class and protected 
+	        	 */
+	        	delete _extendClass.class;
+	        	delete _extendClass.protected;
 	        	
 	        	for(_publicPropOrFunc in this){
 	        		newClass[_publicPropOrFunc] = this[_publicPropOrFunc];
@@ -68,12 +89,57 @@ function Class(namespace, classDefinition, classConstants){
         };
         
         /**
-         * Add the private variables to this class
-         * @param {Object} the private variables of the extending class
+         * To make sure the _privates are only used within this block of code
+         * This block of code is to make the protected and private funcs/props
+         * available in the extending class
          */
-        this.addPrivates = function(privates){
-        	_class = privates;
-        };
+        (function(self){
+        	var _privates = {};
+        	
+        	/**
+	         * Add the private variables to this class
+	         * @param {Object} the private variables of the extending class
+	         */
+	        self.addExtendedPrivates = function(privates){
+	        	var _propOrFunc,
+	        		_currentPropOrFunc;
+	        	
+	        	for(_propOrFunc in privates){
+	        		_currentPropOrFunc = privates[_propOrFunc];
+	        		if(typeof(_currentPropOrFunc) === "function"){
+	        			(function(func){
+		        			_privates[func] = function(){
+		        				return privates[func].apply(_privates, arguments);
+		        			};
+	        			}(_propOrFunc));
+	        		}else{
+	        			_privates[_propOrFunc] = privates[_propOrFunc];
+	        		}
+	        	}
+	        };
+	        
+	        /**
+	         * Add the protected variables and functions to this class
+	         * @param {Object} the protected variables and functions of the extending class
+	         */
+	        self.addExtendedProtected = function(protected){
+	        	var _propOrFunc,
+	        		_currentPropOrFunc;
+	        	for(_propOrFunc in protected){
+	        		_currentPropOrFunc = protected[_propOrFunc];
+	        		if(typeof(_currentPropOrFunc) === "function"){
+	        			(function(func){
+		        			_protected[func] = _class[func] = _privates[func] = function(){
+		        				return protected[func].apply(_privates, arguments);
+		        			};
+	        			}(_propOrFunc));
+	        		}else{
+	        			_protected[_propOrFunc] = _class[_propOrFunc] = _privates[_propOrFunc] = protected[_propOrFunc];
+	        		}
+	        	}
+	        };
+        }(this));
+        
         
         /**
          * Create a private property
@@ -86,6 +152,18 @@ function Class(namespace, classDefinition, classConstants){
         this.privateProperty = function(type, property, value){
     		isOfType(value, type);
     		return _class[property] = value;
+        };
+        
+        /**
+         * Create a protected property
+         * Set this property into the class representable
+         * @param {String|Class} type The type of the property
+         * @param {String} property The name of the property
+         * @param {Object} value The value of the property
+         * @return {Object} returns the value
+         */
+        this.protectedProperty = function(type, property, value){
+    		_protected[property] = this.privateProperty(type, property, value);
         };
         
         /**
@@ -118,6 +196,18 @@ function Class(namespace, classDefinition, classConstants){
         };
         
         /**
+         * Create a protected method
+         * Set this method into the class representable
+         * @param {String|Class} type The type of the property
+         * @param {String} property The name of the property
+         * @param {Object} value The value of the property
+         * @return {Object} returns the value of the function
+         */
+        this.protectedMethod = function(returnType, methodName, method){
+        	_protected[methodName] = this.privateMethod(returnType, methodName, method);
+        };
+        
+        /**
          * Create a public method
          * Uses the privateMethod function to set it into the class representable
          * Forwards the privateMethod into the this scope
@@ -139,7 +229,10 @@ function Class(namespace, classDefinition, classConstants){
         // Remove the class creation methods from the created Class
         // We don't want to polute the classes we make
         delete this.import;
-        delete this.addPrivates;
+        delete this.addExtendedProtected;
+    	delete this.addExtendedPrivates;
+    	delete this.protectedMethod;
+    	delete this.privateProperty;
         delete this.privateProperty;
         delete this.publicProperty;
         delete this.privateMethod;

@@ -173,10 +173,19 @@ describe('Class module', function(){
 	        
 	        expect(new com.provictores.Foo().test instanceof com.provictores.Test).toEqual(true);
 	    });
-	    
-	    it('should be able to extend a class', function(){
-	    	Class('com.provictores.Foo', function(){
+    });
+    
+    describe('Extent class', function(){
+    	
+    	beforeEach(function(){
+    		Class('com.provictores.Foo', function(){
 	    		this.privateProperty('string', 'foo', 'bar');
+	    		
+	    		this.protectedProperty('string', 'win', 'tigerblood');
+	    		
+	    		this.protectedMethod('string', 'lose', function(){
+	    			return "You have no " + this.win;
+	    		});
 	            
 	            this.publicMethod('string', 'getFoo', function(){
 	                return this.foo;
@@ -186,12 +195,43 @@ describe('Class module', function(){
 	        Class('com.provictores.Bar', function(){
 	        	this.import('com.provictores.Foo');
 	        	this.extends(this.Foo);
+	        	
+	        	this.publicMethod('string', 'getPoo', function(){
+	        		return this.foo;
+	        	});
+	        	
+	        	this.publicMethod('string', 'getWin', function(){
+	        		return this.win;
+	        	});
+	        	
+	        	this.publicMethod('string', 'youLose', function(){
+	        		return this.lose();
+	        	});
 	        });
-	        
+    	});
+    	
+    	afterEach(function(){
+			com.provictores.Test = undefined;
+			com.provictores.Foo = undefined;
+			com.provictores.Bar = undefined;
+		});
+    	
+    	it('should be able to extend a class', function(){
 	        var bar = new com.provictores.Bar();
-	        console.debug("My class bar", bar);
 	        expect(bar.getFoo()).toEqual('bar');
 	    });
+	    
+	    it('should throw an error when a child tries to access a private variable', function(){
+	    	var bar = new com.provictores.Bar();
+	    	expect(function(){
+	            bar.getPoo();
+	        }).toThrow('Type Reference Error');
+	    });
+	    
+	    it('should be able to access the protected variables and functions', function(){
+	    	var bar = new com.provictores.Bar();
+	    	expect(bar.getWin()).toEqual('tigerblood');
+	    	expect(bar.youLose()).toEqual('You have no tigerblood');
+	    });
     });
-    
 });
