@@ -38,6 +38,7 @@ Exameples
 Declaring a class
 
     Class('Test', function(){});
+    var test = new Test();
     
 Declaring properties
 
@@ -53,5 +54,53 @@ Declaring properties
         });
         this.protectedMethod('boolean', 'upFool', function(){
             this.fool++;
+        });
+    });
+
+Package a class
+
+    Class('com.provictores.Test', function(){});
+    var test = new com.provictores.Test();
+    
+Import a class
+
+    Class('com.provictores.Foo', function(){
+        this.publicProperty('string', 'food', 'banana');
+    });
+    
+    Class('com.provictores.Bar', function(){
+        this.import('com.provictores.Foo'); //access with this.Foo
+        
+        this.publicMethod('string', 'getFood', function(){
+            return this.Foo.food; //banana
+        });
+    });
+
+Extending a class
+
+    Class('com.provictores.Foo', function(){
+        this.privateProperty('boolean', 'foo', false);
+        this.publicProperty('string', 'food', 'banana');
+        this.protectedProperty('integer', 'fool', 0);
+        this.privateMethod('boolean', 'getFoo', function(){
+            return this.foo;
+        });
+        this.publicMethod('string', 'getFood', function(){
+            return this.food;
+        });
+        this.protectedMethod('boolean', 'upFool', function(){
+            this.fool++;
+        });
+    });
+    
+    Class('com.provictores.Bar', function(){
+        this.extends('com.provictores.Foo'); 
+        
+        // @overides the method in foo
+        this.publicMethod('string', 'getFood', function(){
+            //this.foo will return "undefined" as food is a private property
+            //this.food will return "banana" as food is a public property
+            //this.upFool will execute the method upFool as this is a protected method
+            return "I " + this.foo + " " + this.food + " and I said this " + this.upFool() + " times";
         });
     });
