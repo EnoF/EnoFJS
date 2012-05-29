@@ -36,4 +36,22 @@ At this moment EnoFJS supports:
 Exameples
 --------
 Declaring a class
-     Class('Test', function(){});
+
+    Class('Test', function(){});
+    
+Declaring properties
+
+    Class('Test', function(){
+        this.privateProperty('boolean', 'foo', false);
+        this.publicProperty('string', 'food', 'banana');
+        this.protectedProperty('integer', 'fool', 0);
+        this.privateMethod('boolean', 'getFoo', function(){
+            return this.foo;
+        });
+        this.publicMethod('string', 'getFood', function(){
+            return this.food;
+        });
+        this.protectedMethod('boolean', 'upFool', function(){
+            this.fool++;
+        });
+    });
