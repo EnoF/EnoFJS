@@ -36,4 +36,4 @@ At this moment EnoFJS supports:
 Exameples
 --------
 Declaring a class
-	Class('Test', function(){});
+     Class('Test', function(){});
