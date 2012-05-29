@@ -2,21 +2,25 @@ EnoFJS
 ======
 OO based programming in Javascript, is often hard to understand. 
 Most people with a C# or Java background often lose track of the 
-scope of variables. 
+variable scopes. 
+
+Keep in mind that Javascript won't be compiled like C# or Java. 
+This means that all errors like undeclared members/typo's, etc. 
+won't be found untill your code is reached. Therefore it's highly
+recommended to use a unit test framework, such as Jasmine.
 
 Goal
 ----
 In EnoFJS the C# or Java like class is simulated in Javascript.
-The goal of this project is to help people understand Javascript 
-and it's way of scoping variables. 
+The goal of this project, is to help people understand Javascript 
+and its way of scoping variables. 
 
 Overview
 --------
-EnoFJS is a layer that translates the your class declaration into
+EnoFJS is a layer, that translates your class declaration into
 a class with your declared scoping on methods and properties. To 
-make this work you will need to understand OO-programming and 
-a glance of an example. The example should be sufficient for 
-an advanced OO-programmer.
+make this work, you need to understand OO-programming. The examples 
+should be sufficient for an advanced OO-programmer.
 
 Support
 -------
@@ -56,6 +60,16 @@ Declaring properties
             this.fool++;
         });
     });
+    
+Declaring constants
+
+    Class('Test', 
+    function(){}, 
+    function(){
+        this.constants('string', 'FOO', 'BAR');
+    });
+    
+    Test.FOO;//BAR
 
 Package a class
 
