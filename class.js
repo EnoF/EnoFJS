@@ -1,10 +1,4 @@
 /**
- * Used to mark extending state
- * This is needed to make sure extending works
- */
-Class.extendingState = false;
-
-/**
  * Define a class
  * @param {String} namespace
  * @param {Function} classDefinition
@@ -72,13 +66,13 @@ function Class(namespace, classDefinition, classConstants){
          */
         this.extends = function(extendClass){
         	// Make sure to enter the extending state
-        	Class.extendingState = true;
+        	enterExtendState();
         	
         	// extended class is created while in the extending state
         	var _extendClass = new extendClass();
         	
         	// Leave the extending state
-        	Class.extendingState = false;
+        	exitExtendState();
         	
         	_extendClass.extend = function(newClass){
 	        	var _publicPropOrFunc;
@@ -254,6 +248,14 @@ function Class(namespace, classDefinition, classConstants){
         delete this.privateMethod;
         delete this.publicMethod;
     };
+    
+    function enterExtendState(){
+    	Class.extendingState = true;
+    }
+    
+    function exitExtendState(){
+    	Class.extendingState = false;
+    }
     
     /**
      * Resolve the name space
