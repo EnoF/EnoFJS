@@ -307,7 +307,13 @@ function Class(namespace, classDefinition, classConstants){
      */
     function isOfType(value, type){
     	if(typeof(type) === "string"){
-			if(typeof(value) !== type){
+    		if(type === "void"){
+    			if(typeof(value) !== "undefined"){
+    				console.warn("The function returned a value while function is expected to be a void");
+    			}
+    			return;
+    		}
+    		if(typeof(value) !== type){
 				throw {
 					message : "Type Reference Error",
 					reason : "Default value " + value + " is not of type " + type

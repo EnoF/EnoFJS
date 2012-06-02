@@ -22,6 +22,17 @@ describe('Class module', function(){
         expect(test.getFoo()).toEqual(true);
     });
     
+    it('should be able to create a void method', function(){
+    	Class('Test', function(){
+            this.publicMethod('void', 'getFoo', function(){
+                
+            });
+        });
+        
+        var test = new Test();
+        expect(typeof(test.getFoo())).toEqual('undefined');
+    });
+    
     it('should throw an Type Reference Error when matching wrong types with wrong default values', function(){
         Class('Test', function(){
             this.privateProperty('blaat', 'foo', true);
