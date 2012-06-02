@@ -1,4 +1,10 @@
 /**
+ * Used to mark extending state
+ * This is needed to make sure extending works
+ */
+Class.extendingState = false;
+
+/**
  * Define a class
  * @param {String} namespace
  * @param {Function} classDefinition
@@ -34,15 +40,13 @@ function Class(namespace, classDefinition, classConstants){
         	_protected = {};
         
         /**
-         * Expose the class and protected in order to make the extention of this class possible
-         * @FIXME need a more elegant solution for this... But at this moment I have no idea how to do this
-         * more elegantly
-         * the properties will be deleted after the extention of the class
+         * Make the _class and _protected publicly available 
+         * These properties will be removed after extending
          */
-        this.expose = function(){
+        if(Class.extendingState){
         	this.class = _class;
         	this.protected = _protected;
-        };
+        }
         
         /**
          * Import a class to this class
@@ -67,9 +71,14 @@ function Class(namespace, classDefinition, classConstants){
          * @param extendClass the class this class should extend
          */
         this.extends = function(extendClass){
+        	// Make sure to enter the extending state
+        	Class.extendingState = true;
+        	
+        	// extended class is created while in the extending state
         	var _extendClass = new extendClass();
         	
-        	_extendClass.expose();
+        	// Leave the extending state
+        	Class.extendingState = false;
         	
         	_extendClass.extend = function(newClass){
 	        	var _publicPropOrFunc;
@@ -80,7 +89,7 @@ function Class(namespace, classDefinition, classConstants){
 	        	
 	        	delete _extendClass.extend;
 	        	/**
-	        	 * @FIXME Delete the class and protected 
+	        	 * The temp exposed variables are removed here
 	        	 */
 	        	delete _extendClass.class;
 	        	delete _extendClass.protected;
@@ -237,6 +246,7 @@ function Class(namespace, classDefinition, classConstants){
         delete this.import;
         delete this.addExtendedProtected;
     	delete this.addExtendedPrivates;
+    	delete this.protectedProperty;
     	delete this.protectedMethod;
     	delete this.privateProperty;
         delete this.privateProperty;
