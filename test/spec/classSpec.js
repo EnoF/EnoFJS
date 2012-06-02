@@ -173,6 +173,32 @@ describe('Class module', function(){
 	        
 	        expect(new com.provictores.Foo().test instanceof com.provictores.Test).toEqual(true);
 	    });
+	    
+	    it('should be able to import a whole package', function(){
+	    	Class('com.provictores.Test', function(){
+	    		this.publicProperty('string', 'foo', 'bar');
+	    	});
+	    	
+	    	Class('com.provictores.Foo', function(){
+	    		this.publicProperty('string', 'hello', 'world');
+	    	});
+	    	
+	    	Class('com.provictores.Bar', function(){
+	    		this.import('com.provictores.*');
+	    		
+	    		this.publicMethod(this.Test, 'getTest', function(){
+	    			return new this.Test();
+	    		});
+	    		
+	    		this.publicMethod(this.Foo, 'getFoo', function(){
+	    			return new this.Foo();
+	    		});
+	    	});
+	    	
+	    	var bar = new com.provictores.Bar();
+	    	expect(bar.getTest() instanceof com.provictores.Test).toEqual(true);
+	    	expect(bar.getFoo() instanceof com.provictores.Foo).toEqual(true);
+	    });
     });
     
     describe('Extent class', function(){

@@ -52,8 +52,14 @@ function Class(namespace, classDefinition, classConstants){
         	var _resolvedNameSpace = resolveNameSpace(namespace),
 				_currentNameSpace = _resolvedNameSpace.currentNameSpace,
 				_currentClass = _resolvedNameSpace.currentClass;
-				
-			this[_currentClass] = _currentNameSpace[_currentClass];
+			
+			if(_currentClass === "*"){
+				for(_currentClass in _currentNameSpace){
+					this[_currentClass] = _class[_currentClass] = _protected[_currentClass] = _currentNameSpace[_currentClass];
+				}
+			}else{
+				this[_currentClass] = _class[_currentClass] = _protected[_currentClass] = _currentNameSpace[_currentClass];
+			}
         };
         
         /**
