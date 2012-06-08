@@ -46,6 +46,19 @@ describe('Class module', function(){
         }).toThrow('Type Reference Error');
     });
     
+    it('should allow instances to be a type of null', function(){
+    	Class('Test', function(){
+            this.privateProperty(Array, 'foo', null);
+            
+            this.publicMethod(Array, 'getFoo', function(){
+                return this.foo;
+            });
+        });
+        
+        var test = new Test();
+        expect(test.getFoo()).toEqual(null);
+    })
+    
     it('should be able to create a private variable accessable through a public function', function(){
         Class('Test', function(){
             this.privateProperty('boolean', 'foo', true);

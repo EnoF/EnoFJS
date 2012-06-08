@@ -319,7 +319,7 @@ function Class(namespace, classDefinition, classConstants){
 					reason : "Default value " + value + " is not of type " + type
 				};
 			}
-		}else if(!value instanceof type){
+		}else if(!value instanceof type || !value === null){
 			throw {
 				message : "Type Reference Error",
 				reason : "Default value " + value + " is not an instance of " + type
