@@ -157,6 +157,23 @@ describe('Class module', function(){
         expect(test.getFoo()).toEqual('bar');
     });
     
+    it('should be able to use a constructor', function(){
+    	Class('Test', function(bar){
+    		this.privateProperty('string', 'foo', '');
+    		
+    		this.publicMethod('string', 'getFoo', function(){
+    			return this.foo;
+    		});
+    		
+    		this.constructor(function(){
+    			this.foo = bar + "!";
+    		});
+    	});
+    	
+    	var test = new Test("bar");
+    	expect(test.getFoo()).toEqual("bar!");
+    });
+    
     describe('Package module', function(){
     	afterEach(function(){
     		com.provictores.Test = undefined;

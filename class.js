@@ -149,6 +149,15 @@ function Class(namespace, classDefinition, classConstants){
 	        };
         }(this));
         
+        /**
+         * The constructor should always be declared at the end of the 
+         * class definition
+         * @TODO create a more elegant way to allow constructor to be
+         * delcared at the beginning
+         */
+        this.constructor = function(construct){
+        	construct.apply(_class, arguments);
+        };
         
         /**
          * Create a private property
