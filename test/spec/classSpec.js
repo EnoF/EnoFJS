@@ -1,5 +1,17 @@
 describe('Class module', function(){
     
+    var Class;
+
+    beforeEach(function () {
+        require(['class'], function (cClass) {
+            Class = cClass;
+        });
+
+        waitsFor(function () {
+            return Class;
+        });
+    });
+
     afterEach(function(){
     	Test = undefined;
     });
