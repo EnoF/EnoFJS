@@ -23,6 +23,8 @@
                     originalProtected = instance.protected,
                     superProtected = Super.protected;
 
+                OriginalClass.prototype = superInstance;
+
                 setOriginalProtected(originalProtected);
 
                 $.extend(superProtected, originalProtected);
