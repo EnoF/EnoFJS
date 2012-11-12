@@ -4,7 +4,7 @@ describe('class extentions', function () {
     var _moduleLoaded = false,
         Parent,
         Child;
-
+    
     require(['classExtentions'], function () {
         _moduleLoaded = true;
         function _Parent() {
