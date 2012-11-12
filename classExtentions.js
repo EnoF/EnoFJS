@@ -16,7 +16,8 @@
     function createClassWrapper(OriginalClass, Super) {
         function ClassWrapper() {
             var instance,
-                _originalProtected;
+                _originalProtected,
+                _arguments = arguments;
 
             function setOriginalProtected(protected) {
                 _originalProtected = protected;
@@ -26,12 +27,19 @@
                 /// <summary>Extend OriginalClass with Super class</summary>
                 /// <param type="Function">Class to be extended</param>
                 /// <param type="Function">Class to extend</param>
-                var instance = new OriginalClass(),
-                    _superInstance = new Super(),
-                    _originalProtected = instance.protected,
-                    _superProtected = Super.protected;
+                var _superInstance = new Super(),
+                    instance,
+                    _originalProtected,
+                    _superProtected;
 
+                _superInstance = Super.apply(_superInstance, _arguments);
                 OriginalClass.prototype = _superInstance;
+
+                instance = new OriginalClass();
+                OriginalClass.apply(instance, _arguments);
+
+                _originalProtected = instance.protected;
+                _superProtected = Super.protected;
 
                 setOriginalProtected(_originalProtected);
 
@@ -47,6 +55,7 @@
                     instance = createExtendedInstance(OriginalClass, Super);
                 } else {
                     instance = new OriginalClass();
+                    OriginalClass.apply(instance, _arguments);
                     setOriginalProtected(instance.protected);
                 }
 

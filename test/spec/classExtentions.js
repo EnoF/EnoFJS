@@ -7,7 +7,7 @@ describe('class extentions', function () {
     
     require(['classExtentions'], function () {
         _moduleLoaded = true;
-        function _Parent() {
+        function _Parent(name) {
             var _water = "WATER",
                 _cola,
 
@@ -22,6 +22,10 @@ describe('class extentions', function () {
                         return protected.hello;
                     }
                 };
+
+            this.getName = function () {
+                return name;
+            };
 
             this.getWater = function () {
                 return "HERE IS SOME " + _water;
@@ -119,5 +123,18 @@ describe('class extentions', function () {
         var child = new Child();
 
         expect(child.getProtected().sayHello()).toEqual("Hi!");
+    });
+
+    it('should be possible to add parameters to the constructor', function () {
+        var child = new Child("Andy");
+
+        expect(child.getName()).toEqual("Andy");
+    });
+
+    it('should be the instance of Parent', function () {
+        var child = new Child(),
+            parent = new Parent();
+        
+        expect(child instanceof parent.constructor).toBeTruthy();
     });
 });
