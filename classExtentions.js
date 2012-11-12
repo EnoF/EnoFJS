@@ -33,15 +33,20 @@
                 return instance;
             }
 
-            if (Super instanceof Function) {
-                instance = createExtendedInstance(OriginalClass, Super);
-            } else {
-                instance = new OriginalClass();
-                setOriginalProtected(instance.protected);
-            }
+            /**
+             * Constructor
+             */
+            (function () {
+                if (Super instanceof Function) {
+                    instance = createExtendedInstance(OriginalClass, Super);
+                } else {
+                    instance = new OriginalClass();
+                    setOriginalProtected(instance.protected);
+                }
 
-            ClassWrapper.protected = _originalProtected;
-            delete instance.protected;
+                ClassWrapper.protected = _originalProtected;
+                delete instance.protected;
+            }());
 
             return instance;
         }
