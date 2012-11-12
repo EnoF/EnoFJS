@@ -11,6 +11,7 @@
 
         this.protected = protected;
     }
+    Parent = Parent.wrap();
 
     function Child() {
         var protected = {
@@ -45,5 +46,11 @@
         var child = new Child();
 
         expect(child.protected).toEqual(undefined);
+    });
+
+    it('should hide this.protected variables after wrapping', function () {
+        var parent = new Parent();
+
+        expect(parent.protected).toEqual(undefined);
     });
 });
