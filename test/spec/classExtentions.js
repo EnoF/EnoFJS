@@ -16,7 +16,11 @@ describe('class extentions', function () {
                     bar: function () {
                         return "BAR";
                     },
-                    override: "WAIT"
+                    override: "WAIT",
+                    hello: "Hello",
+                    sayHello: function () {
+                        return protected.hello;
+                    }
                 };
 
             this.getWater = function () {
@@ -41,7 +45,8 @@ describe('class extentions', function () {
                 getFooBar: function () {
                     return protected.foo + " " + protected.bar();
                 },
-                override: "DONE"
+                override: "DONE",
+                hello: "Hi!"
             };
 
             this.protected = protected;
@@ -108,5 +113,11 @@ describe('class extentions', function () {
         expect(function () {
             child.tryGetWater();
         }).toThrow("_water is not defined");
+    });
+
+    it('should use the overwritten protected variables for protected functions', function () {
+        var child = new Child();
+
+        expect(child.getProtected().sayHello()).toEqual("Hi!");
     });
 });
