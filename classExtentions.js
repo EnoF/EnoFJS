@@ -1,8 +1,22 @@
-﻿Function.prototype.extend = function (Super) {
+﻿describe('classExtentions', function () {
 
-    var OriginalClass = this;
+    Function.prototype.extend = function (Super) {
 
-    function ClassWrapper() {
+        return createClassWrapper(this, Super);
+    };
+
+    function createClassWrapper(OriginalClass, Super) {
+        function ClassWrapper() {
+            var instance = createInstance(OriginalClass, Super);
+
+            delete instance.protected;
+
+            return instance;
+        }
+        return ClassWrapper;
+    }
+
+    function createInstance(OriginalClass, Super) {
         var instance = new OriginalClass(),
             superInstance = new Super(),
             originalProtected = instance.protected,
@@ -13,6 +27,4 @@
 
         return instance;
     }
-
-    return ClassWrapper;
-};
+});

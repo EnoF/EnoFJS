@@ -40,4 +40,10 @@
 
         expect(child.getProtected().override).toEqual("DONE");
     });
+
+    it('should hide this.protected variables after extending', function () {
+        var child = new Child();
+
+        expect(child.protected).toEqual(undefined);
+    });
 });
