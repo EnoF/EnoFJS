@@ -1,4 +1,4 @@
-﻿describe('classExtentions', function () {
+﻿define('classExtentions', function () {
 
     Function.prototype.extend = function (Super) {
         return createClassWrapper(this, Super);
@@ -19,16 +19,16 @@
 
             function createExtendedInstance(OriginalClass, Super) {
                 var instance = new OriginalClass(),
-                    superInstance = new Super(),
-                    originalProtected = instance.protected,
-                    superProtected = Super.protected;
+                    _superInstance = new Super(),
+                    _originalProtected = instance.protected,
+                    _superProtected = Super.protected;
 
-                OriginalClass.prototype = superInstance;
+                OriginalClass.prototype = _superInstance;
 
-                setOriginalProtected(originalProtected);
+                setOriginalProtected(_originalProtected);
 
-                $.extend(superProtected, originalProtected);
-                $.extend(originalProtected, superProtected);
+                $.extend(_superProtected, _originalProtected);
+                $.extend(_originalProtected, _superProtected);
 
                 return instance;
             }

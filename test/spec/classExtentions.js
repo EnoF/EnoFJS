@@ -1,53 +1,65 @@
-﻿describe('class extentions', function () {
+﻿/// <reference path="../../classExtentions.js" />
+describe('class extentions', function () {
 
-    function Parent() {
-        var _water = "WATER",
-            _cola,
+    var _moduleLoaded = false,
+        Parent,
+        Child;
 
-            protected = {
-                foo: "FOO",
-                bar: function () {
-                    return "BAR";
-                },
-                override: "WAIT"
+    require(['classExtentions'], function () {
+        _moduleLoaded = true;
+        function _Parent() {
+            var _water = "WATER",
+                _cola,
+
+                protected = {
+                    foo: "FOO",
+                    bar: function () {
+                        return "BAR";
+                    },
+                    override: "WAIT"
+                };
+
+            this.getWater = function () {
+                return "HERE IS SOME " + _water;
             };
 
-        this.getWater = function () {
-            return "HERE IS SOME " + _water;
-        };
+            this.getCola = function () {
+                return _cola;
+            };
 
-        this.getCola = function () {
-            return _cola;
-        };
+            this.setCola = function (cola) {
+                _cola = cola;
+            };
 
-        this.setCola = function (cola) {
-            _cola = cola;
-        };
+            this.protected = protected;
+        }
+        Parent = _Parent.wrap();
 
-        this.protected = protected;
-    }
-    Parent = Parent.wrap();
+        function _Child() {
+            var protected = {
+                food: "FOOD",
+                getFooBar: function () {
+                    return protected.foo + " " + protected.bar();
+                },
+                override: "DONE"
+            };
 
-    function Child() {
-        var protected = {
-            food: "FOOD",
-            getFooBar: function () {
-                return protected.foo + " " + protected.bar();
-            },
-            override: "DONE"
-        };
+            this.protected = protected;
 
-        this.protected = protected;
+            this.getProtected = function () {
+                return protected;
+            };
 
-        this.getProtected = function () {
-            return protected;
-        };
-
-        this.tryGetWater = function () {
-            return "HERE IS SOME " + _water;
-        };
-    }
-    Child = Child.extend(Parent);
+            this.tryGetWater = function () {
+                return "HERE IS SOME " + _water;
+            };
+        }
+        Child = _Child.extend(Parent);
+    });
+    
+    waitsFor(function(){
+        return _moduleLoaded;
+    });
 
     it('should copy protected variables from parent to child', function () {
         var child = new Child();
