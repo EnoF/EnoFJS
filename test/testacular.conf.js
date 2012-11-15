@@ -7,16 +7,21 @@
 
 
 // base path, that will be used to resolve files and exclude
-basePath = '../..';
+basePath = '..';
 
 // list of files / patterns to load in the browser
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'lib/jquery/1.8.1.js',
-  'lib/require.js',
-  'test/spec/*.js',
-  '*.js'
+  REQUIRE,
+  REQUIRE_ADAPTER,
+
+
+  { pattern: '*.js', included: false },
+  { pattern: 'test/spec/*.js', included: false },
+  { pattern: 'libs/jquery-1.8.1.js', included: false},
+  // Main
+  'test/test.main.js'
 ];
 
 // list of files to exclude
@@ -64,7 +69,7 @@ autoWatch = true;
 // - PhantomJS
 // - IE (only Windows)
 // CLI --browsers Chrome,Firefox,Safari
-browsers = ['Chrome'];
+browsers = [];
 
 // If browser does not capture in given timeout [ms], kill it
 // CLI --capture-timeout 5000

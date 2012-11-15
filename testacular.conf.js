@@ -8,6 +8,8 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
+  REQUIRE,
+  REQUIRE_ADAPTER,
   JASMINE,
   JASMINE_ADAPTER,
   'libs/jquery-1.8.1.js',
