@@ -1,71 +1,72 @@
 ﻿define('classExtentions', function () {
 
-    Function.prototype.extend = function (Super) {
-        /// <summary>Extend a class</summary>
-        /// <param name="Super" type="Function">The Super class to extend</param>
-        /// <returns type="Function">The extended class, overwrite your own created class with this!</returns>
-        return createClassWrapper(this, Super);
-    };
+	Function.prototype.extend = function (Super) {
+		/// <summary>Extend a class</summary>
+		/// <param name="Super" type="Function">The Super class to extend</param>
+		/// <returns type="Function">The extended class, overwrite your own created class with this!</returns>
+		return createClassWrapper(this, Super);
+	};
 
-    Function.prototype.wrap = function () {
-        /// <summary>Hides the protected values and functions by wrapping it in an Wrapper Class</summary>
-        /// <returns type="Function">The wrapper class</returns>
-        return createClassWrapper(this);
-    };
+	Function.prototype.wrap = function () {
+		/// <summary>Hides the protected values and functions by wrapping it in an Wrapper Class</summary>
+		/// <returns type="Function">The wrapper class</returns>
+		return createClassWrapper(this);
+	};
 
-    function createClassWrapper(OriginalClass, Super) {
-        function ClassWrapper() {
-            var instance,
-                _originalProtected,
-                _arguments = arguments;
+	function createClassWrapper(OriginalClass, Super) {
+		function ClassWrapper() {
+			function hasInitializedBefore() {
+				return OriginalClass.initialized;
+			}
 
-            function setOriginalProtected(protected) {
-                _originalProtected = protected;
-            }
+			function initializeOriginalClass() {
+				var instance;
+				if (Super instanceof Function) {
+					instance = createExtendedInstance.apply(this, arguments);
+				} else {
+					instance = createInstance.apply(this, arguments);
+				}
+				stripInstance(instance);
+				return instance;
+			}
 
-            function createExtendedInstance(OriginalClass, Super) {
-                /// <summary>Extend OriginalClass with Super class</summary>
-                /// <param type="Function">Class to be extended</param>
-                /// <param type="Function">Class to extend</param>
-                var _superInstance = new Super(),
-                    instance,
-                    _originalProtected,
-                    _superProtected;
+			function stripInstance(instance) {
+				delete instance._protected;
+				delete instance._constructor;
+			}
 
-                _superInstance = Super.apply(_superInstance, _arguments);
-                OriginalClass.prototype = _superInstance;
+			function createExtendedInstance() {
+				var _super = new Super.OriginalClass();
+				var _superProtected = _super._protected;
+				delete _super._protected;
+				OriginalClass.prototype = _super;
+				var instance = new OriginalClass();
+				var _protected = instance._protected;
+				mergeProtected(_protected, _superProtected);
+				applyArguments(instance, arguments);
+				return instance;
+			}
 
-                instance = new OriginalClass();
-                OriginalClass.apply(instance, _arguments);
+			function mergeProtected(thisProtected, superProtected) {
+				$.extend(superProtected, thisProtected);
+				$.extend(thisProtected, superProtected);
+			}
 
-                _originalProtected = instance.protected;
-                _superProtected = Super.protected;
+			function createInstance() {
+				var instance = new OriginalClass();
+				applyArguments(instance, arguments);
+				return instance;
+			}
 
-                setOriginalProtected(_originalProtected);
+			function applyArguments(instance, args) {
+				if (instance)
+					instance._constructor.apply(instance, args);
+			}
 
-                $.extend(_superProtected, _originalProtected);
-                $.extend(_originalProtected, _superProtected);
-
-                return instance;
-            }
-
-            (function () {
-                /// <summary>Constructor for the ClassWrapper</summary>
-                if (Super instanceof Function) {
-                    instance = createExtendedInstance(OriginalClass, Super);
-                } else {
-                    instance = new OriginalClass();
-                    OriginalClass.apply(instance, _arguments);
-                    setOriginalProtected(instance.protected);
-                }
-
-                ClassWrapper.protected = _originalProtected;
-                delete instance.protected;
-            }());
-
-            return instance;
-        }
-        return ClassWrapper;
-    }
+			return initializeOriginalClass.apply(this, arguments);
+		}
+		ClassWrapper.OriginalClass = OriginalClass;
+		return ClassWrapper;
+	}
 
 });

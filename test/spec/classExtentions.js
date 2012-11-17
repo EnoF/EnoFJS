@@ -4,8 +4,9 @@
     function Parent(name) {
       var _water = "WATER",
           _cola,
+          _name,
 
-          protected = {
+          _protected = {
             foo: "FOO",
             bar: function () {
               return "BAR";
@@ -13,12 +14,16 @@
             override: "WAIT",
             hello: "Hello",
             sayHello: function () {
-              return protected.hello;
+              return _protected.hello;
             }
           };
 
+      this._constructor = function (name) {
+        _name = name;
+      };
+
       this.getName = function () {
-        return name;
+        return _name;
       };
 
       this.getWater = function () {
@@ -33,24 +38,24 @@
         _cola = cola;
       };
 
-      this.protected = protected;
+      this._protected = _protected;
     }
     Parent = Parent.wrap();
 
     function _Child() {
-      var protected = {
+      var _protected = {
         food: "FOOD",
         getFooBar: function () {
-          return protected.foo + " " + protected.bar();
+          return _protected.foo + " " + _protected.bar();
         },
         override: "DONE",
         hello: "Hi!"
       };
 
-      this.protected = protected;
+      this._protected = _protected;
 
       this.getProtected = function () {
-        return protected;
+        return _protected;
       };
 
       this.tryGetWater = function () {
@@ -61,7 +66,13 @@
 
     describe('extending a class', function () {
 
-      it('should copy protected variables from parent to child', function () {
+      it('should be able to instantiate a wrapped class', function () {
+        var parent = new Parent("Andy");
+
+        expect(parent.getName()).toEqual("Andy");
+      });
+
+      it('should copy _protected variables from parent to child', function () {
         console.debug(Child);
         var child = new Child();
 
@@ -74,10 +85,10 @@
         expect(child.getProtected().override).toEqual("DONE");
       });
 
-      it('should hide this.protected variables after extending', function () {
+      it('should hide this._protected variables after extending', function () {
         var child = new Child();
 
-        expect(child.protected).toEqual(undefined);
+        expect(child._protected).toEqual(undefined);
       });
 
       it('should be able to get the public functions', function () {
@@ -105,7 +116,7 @@
         }).toThrow("_water is not defined");
       });
 
-      it('should use the overwritten protected variables for protected functions', function () {
+      it('should use the overwritten _protected variables for _protected functions', function () {
         var child = new Child();
 
         expect(child.getProtected().sayHello()).toEqual("Hi!");
@@ -126,10 +137,10 @@
     });
 
     describe('wrapping classes ready to get extended', function () {
-      it('should hide this.protected variables after wrapping', function () {
+      it('should hide this._protected variables after wrapping', function () {
         var parent = new Parent();
 
-        expect(parent.protected).toEqual(undefined);
+        expect(parent._protected).toEqual(undefined);
       });
     });
 
