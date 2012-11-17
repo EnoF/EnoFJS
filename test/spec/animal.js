@@ -1,7 +1,11 @@
 ﻿define(['classExtentions'], function () {
   describe('animal', function () {
     function Animal(name) {
-      var _name = name;
+    	var _name;
+			
+    	this._constructor = function (name) {
+    		_name = name;
+    	};
 
       this.getName = function () {
         return _name;
