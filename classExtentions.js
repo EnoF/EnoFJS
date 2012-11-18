@@ -15,9 +15,8 @@
 
 	function createClassWrapper(OriginalClass, Super) {
 		function ClassWrapper() {
-			function hasInitializedBefore() {
-				return OriginalClass.initialized;
-			}
+
+			if (!(this instanceof ClassWrapper)) throw new Error('Instantiate a class with a new statement');
 
 			function initializeOriginalClass() {
 				var instance;
@@ -36,15 +35,20 @@
 			}
 
 			function createExtendedInstance() {
+				prepareExtendingOriginalClass();
+				var instance = new OriginalClass();
+				var _protected = instance._protected;
+				mergeProtected(_protected, OriginalClass.superProtected);
+				applyArguments(instance, arguments);
+				return instance;
+			}
+
+			function prepareExtendingOriginalClass() {
 				var _super = new Super.OriginalClass();
 				var _superProtected = _super._protected;
 				delete _super._protected;
 				OriginalClass.prototype = _super;
-				var instance = new OriginalClass();
-				var _protected = instance._protected;
-				mergeProtected(_protected, _superProtected);
-				applyArguments(instance, arguments);
-				return instance;
+				OriginalClass.superProtected = _superProtected;
 			}
 
 			function mergeProtected(thisProtected, superProtected) {
@@ -59,8 +63,11 @@
 			}
 
 			function applyArguments(instance, args) {
-				if (instance)
+				if (instance && !(instance._constructor instanceof Function)) {
+					throw new Error('Class has no constructor defined');
+				} else {
 					instance._constructor.apply(instance, args);
+				}
 			}
 
 			return initializeOriginalClass.apply(this, arguments);

@@ -165,3 +165,12 @@ pip-log.txt
 .DS_Store
 
 test-results.xml
+
+#############
+## Coverage
+#############
+/coverage/*.*
+/coverage/**/*.*
+/coverage/**/**/*.*
+/test/node_modules/**/*
+/test/node_modules/**/**.*

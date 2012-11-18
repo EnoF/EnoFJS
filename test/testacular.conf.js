@@ -26,18 +26,19 @@ files = [
 
 // list of files to exclude
 exclude = [
-  'adapter/require.src.js'
+  'adapter/require.src.js',
+	'coverage/**/*.js'
 ];
 
-// use dots reporter, as travis terminal does not support escaping sequences
-// possible values: 'dots', 'progress', 'junit'
-// CLI --reporters progress
-reporters = ['progress', 'junit'];
+//// use dots reporter, as travis terminal does not support escaping sequences
+//// possible values: 'dots', 'progress', 'junit'
+//// CLI --reporters progress
+//reporters = ['progress', 'junit'];
 
-junitReporter = {
-  // will be resolved to basePath (in the same way as files/exclude patterns)
-  outputFile: 'test-results.xml'
-};
+//junitReporter = {
+//  // will be resolved to basePath (in the same way as files/exclude patterns)
+//  outputFile: 'test-results.xml'
+//};
 
 // web server port
 // CLI --port 9876
@@ -83,7 +84,25 @@ singleRun = false;
 // CLI --report-slower-than 500
 reportSlowerThan = 500;
 
-// compile coffee scripts
+//// compile coffee scripts
+//preprocessors = {
+//  '**/*.coffee': 'coffee'
+//};
+
+reporters = ['progress', 'coverage'];
+
 preprocessors = {
-  '**/*.coffee': 'coffee'
+	'**/*.js': 'coverage'
+};
+
+//Code Coverage options. report type available:
+//- html (default)
+//- lcov (lcov and html)
+//- lcovonly
+//- text (standard output)
+//- text-summary (standard output)
+coverageReporter = {
+	// cf. http://gotwarlost.github.com/istanbul/public/apidocs/
+	type: 'html',
+	dir: 'coverage/'
 };
