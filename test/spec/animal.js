@@ -1,46 +1,46 @@
 ﻿define(['classExtentions'], function () {
-  describe('animal', function () {
-    function Animal(name) {
-    	var _name;
-			
-    	this._constructor = function (name) {
-    		_name = name;
-    	};
+	describe('animal', function () {
+		function Animal(name) {
+			var _name;
 
-      this.getName = function () {
-        return _name;
-      };
+			this._constructor = function (name) {
+				_name = name;
+			};
 
-      this.talk = function () {
-        throw new Error("Not implemented");
-      };
-    }
-    Animal = Animal.wrap();
+			this.getName = function () {
+				return _name;
+			};
 
-    function Dog() {
-      this.talk = function () {
-        return "WOOF I am a " + this.getName();
-      };
-    }
-    Dog = Dog.extend(Animal);
+			this.talk = function () {
+				throw new Error("Not implemented");
+			};
+		}
+		Animal = Animal.wrap();
 
-    function Cat() {
-      this.talk = function () {
-        return "MIAW I am a " + this.getName();
-      };
-    }
-    Cat = Cat.extend(Animal);
+		function Dog() {
+			this.talk = function () {
+				return "WOOF I am a " + this.getName();
+			};
+		}
+		Dog = Dog.extend(Animal);
 
-    it('should say woof i am a dog', function () {
-      var dog = new Dog("Dog");
+		function Cat() {
+			this.talk = function () {
+				return "MIAW I am a " + this.getName();
+			};
+		}
+		Cat = Cat.extend(Animal);
 
-      expect(dog.talk()).toEqual("WOOF I am a Dog");
-    });
+		it('should say woof i am a dog', function () {
+			var dog = new Dog("Dog");
 
-    it('should say miaw i am a cat', function () {
-      var cat = new Cat("Cat");
+			expect(dog.talk()).toEqual("WOOF I am a Dog");
+		});
 
-      expect(cat.talk()).toEqual("MIAW I am a Cat");
-    });
-  });
+		it('should say miaw i am a cat', function () {
+			var cat = new Cat("Cat");
+
+			expect(cat.talk()).toEqual("MIAW I am a Cat");
+		});
+	});
 });
