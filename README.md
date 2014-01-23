@@ -1,120 +1,124 @@
 EnoFJS
 ======
-OO based programming in Javascript, is often hard to understand. 
-Most people with a C# or Java background often lose track of the 
-variable scopes. 
+Javascript supports private and public out of the box. However
+inheritance is often claimed impossible or done with prototype.
 
-Keep in mind that Javascript won't be compiled like C# or Java. 
-This means that all errors like undeclared members/typo's, etc. 
-won't be found untill your code is reached. Therefore it's highly
-recommended to use a unit test framework, such as Jasmine.
+While inheriting with prototype is not necessarily bad, it
+however implies that all inheritable properties have to be public
+and all properties should be public in case a function in the
+prototype needs to access it.
 
 Goal
 ----
-In EnoFJS the C# or Java like class is simulated in Javascript.
-The goal of this project, is to help people understand Javascript 
-and its way of scoping variables. 
-
-Overview
---------
-EnoFJS is a layer, that translates your class declaration into
-a class with your declared scoping on methods and properties. To 
-make this work, you need to understand OO-programming. The examples 
-should be sufficient for an advanced OO-programmer.
+EnoFJS is purpose is to make it easy to handle inheritance and
+making it visible what the accessibility is of an property.
 
 Support
 -------
-At this moment EnoFJS supports:
- * Namespacing
- * Class Declarations
- * public properties
- * public methods
- * protected properties
- * protected methods
- * private properties
- * private methods
- * Class Constants
- * Class Extentions
- * Class Imports
+EnoFJS supports:
+ * public scoping
+ * private scoping
+ * protected scoping
+ * extending
+ * super access
 
 Exameples
 --------
-Declaring a class
+Declaring an empty class
 
-    Class('Test', function(){});
-    var test = new Test();
+    var Animal = Class(function Animal() {
+
+    });
+
+    var animal = new Animal();
     
-Declaring properties
+Declaring private scope
 
-    Class('Test', function(){
-        this.privateProperty('boolean', 'foo', false);
-        this.publicProperty('string', 'food', 'banana');
-        this.protectedProperty('integer', 'fool', 0);
-        this.privateMethod('boolean', 'getFoo', function(){
-            return this.foo;
-        });
-        this.publicMethod('string', 'getFood', function(){
-            return this.food;
-        });
-        this.protectedMethod('boolean', 'upFool', function(){
-            this.fool++;
-        });
+    var Animal = Class(function Animal() {
+        this.private = {
+            privateFoo: 'foo',
+            privateBar: function privateBar() {
+            }
+        };
+
+        this.constructor = function constructor(){
+        };
     });
     
-Declaring constants
+Declaring public scope
 
-    Class('Test', 
-    function(){}, 
-    function(){
-        this.constants('string', 'FOO', 'BAR');
+    var Animal = Class(function Animal() {
+        this.public = {
+            publicFoo: 'foo',
+            publicBar: function privateBar() {
+            }
+        };
+
+        this.constructor = function constructor(){
+        };
     });
-    
-    Test.FOO;//BAR
 
-Package a class
+Declaring protected scope
 
-    Class('com.provictores.Test', function(){});
-    var test = new com.provictores.Test();
-    
-Import a class
+    var Animal = Class(function Animal() {
+        this.protected = {
+            protectedFoo: 'foo',
+            protectedBar: function privateBar() {
+            }
+        };
 
-    Class('com.provictores.Foo', function(){
-        this.publicProperty('string', 'food', 'banana');
+        this.constructor = function constructor(){
+        };
     });
-    
-    Class('com.provictores.Bar', function(){
-        this.import('com.provictores.Foo'); //access with this.Foo
-        
-        this.publicMethod('string', 'getFood', function(){
-            return this.Foo.food; //banana
-        });
+
+Declaring a constructor
+
+    var Animal = Class(function Animal() {
+        this.private = {
+            privateFoo: null,
+            privateBar: function privateBar() {
+            }
+        };
+
+        this.constructor = function constructor(foo){
+            this.private.foo = foo;
+        };
     });
 
 Extending a class
 
-    Class('com.provictores.Foo', function(){
-        this.privateProperty('boolean', 'foo', false);
-        this.publicProperty('string', 'food', 'banana');
-        this.protectedProperty('integer', 'fool', 0);
-        this.privateMethod('boolean', 'getFoo', function(){
-            return this.foo;
-        });
-        this.publicMethod('string', 'getFood', function(){
-            return this.food;
-        });
-        this.protectedMethod('boolean', 'upFool', function(){
-            this.fool++;
-        });
+    var Animal = Class(function Animal() {
+        this.private = {
+            birthDate: new Date()
+        };
+
+        this.protected = {
+            formatBirthDate: function formatBirthDate() {
+                return this.private.birthDate.toString();
+            }
+        };
+
+        this.public = {
+            getBirthDate: function getBirthDate() {
+                return 'I am born at' + this.protected.formatBirthDate();
+            };
+        };
+
+        this.constructor = function constructor(birthDate){
+            if(birthDate instanceof Date){
+                this.private.birthDate = birthDate;
+            }
+        };
     });
-    
-    Class('com.provictores.Bar', function(){
-        this.extends('com.provictores.Foo'); 
-        
-        // @overides the method in foo
-        this.publicMethod('string', 'getFood', function(){
-            //this.foo will return "undefined" as food is a private property
-            //this.food will return "banana" as food is a public property
-            //this.upFool will execute the method upFool as this is a protected method
-            return "I " + this.foo + " " + this.food + " and I said this " + this.upFool() + " times";
-        });
+
+    var Dog = Class(function Dog() {
+        this.extend = Animal;
+
+        this.constructor = function(birthDate){
+            this.super.constructor(birthDate);
+        };
     });
+
+    var dog = new Dog(new Date());
+
+For more details take a look at the [https://github.com/EnoF/EnoFJS/blob/master/test/spec/ClassFactorySpec.js ClassFactorySpec]
