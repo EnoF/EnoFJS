@@ -22,7 +22,7 @@ EnoFJS supports:
  * extending
  * super access
 
-Exameples
+Examples
 --------
 Declaring an empty class
 
