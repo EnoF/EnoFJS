@@ -121,4 +121,4 @@ Extending a class
 
     var dog = new Dog(new Date());
 
-For more details take a look at the [https://github.com/EnoF/EnoFJS/blob/master/test/spec/ClassFactorySpec.js ClassFactorySpec]
+For more details take a look at the [ClassFactorySpec](test/spec/ClassFactorySpec.js)
