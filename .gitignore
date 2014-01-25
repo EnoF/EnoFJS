@@ -172,9 +172,12 @@ pip-log.txt
 
 test-results.xml
 
+node_modules
+
 #############
 ## Coverage
 #############
+/coverage
 /coverage/*.*
 /coverage/**/*.*
 /coverage/**/**/*.*
