@@ -23,7 +23,7 @@
      * @param NewClass The Class that has to be generated
      * @returns {EnoFJSClass} A generated class
      */
-    window.Class = function Class(NewClass) {
+    window.clazz = function clazz(NewClass) {
         var className = extractClassName(NewClass);
 
         registeredClasses[className] = NewClass;

@@ -26,7 +26,7 @@ Examples
 --------
 Declaring an empty class
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
 
     });
 
@@ -34,7 +34,7 @@ Declaring an empty class
     
 Declaring private scope
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
         this.private = {
             privateFoo: 'foo',
             privateBar: function privateBar() {
@@ -47,7 +47,7 @@ Declaring private scope
     
 Declaring public scope
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
         this.public = {
             publicFoo: 'foo',
             publicBar: function privateBar() {
@@ -60,7 +60,7 @@ Declaring public scope
 
 Declaring protected scope
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
         this.protected = {
             protectedFoo: 'foo',
             protectedBar: function privateBar() {
@@ -73,7 +73,7 @@ Declaring protected scope
 
 Declaring a constructor
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
         this.private = {
             privateFoo: null,
             privateBar: function privateBar() {
@@ -87,7 +87,7 @@ Declaring a constructor
 
 Extending a class
 
-    var Animal = Class(function Animal() {
+    var Animal = clazz(function Animal() {
         this.private = {
             birthDate: new Date()
         };
@@ -111,7 +111,7 @@ Extending a class
         };
     });
 
-    var Dog = Class(function Dog() {
+    var Dog = clazz(function Dog() {
         this.extend = Animal;
 
         this.constructor = function(birthDate){
