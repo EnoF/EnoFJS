@@ -9,7 +9,7 @@
     describe('Class factory', function classFactorySpecs() {
 
         describe('Class constructor', function classConstructorSpecs() {
-            var ClassConstructorTestClass = Class(function ClassConstructorTestClass() {
+            var ClassConstructorTestClass = clazz(function ClassConstructorTestClass() {
                 this.private = {
                     foo: 'foo',
                     getBar: function getBar() {
@@ -114,7 +114,7 @@
         });
 
         describe('Class extending', function classExtendingSpecs() {
-            var Animal = Class(function Animal() {
+            var Animal = clazz(function Animal() {
                 this.private = {
                     age: 0,
                     say: null
@@ -147,7 +147,7 @@
                 };
             });
 
-            var Dog = Class(function Dog() {
+            var Dog = clazz(function Dog() {
                 this.extend = 'Animal';
 
                 this.private = {
@@ -212,7 +212,7 @@
         describe('Border cases', function borderCasesSpecs() {
             Array.prototype.noop = function () {
             };
-            var ClassConstructorTestClass = Class(function ClassConstructorTestClass() {
+            var ClassConstructorTestClass = clazz(function ClassConstructorTestClass() {
                 this.public = ['banana'];
 
                 this.public.foo = 'foo';
