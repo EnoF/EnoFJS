@@ -140,6 +140,22 @@
                     list.addAfter('nono', 'what', 'ever');
                 }).toThrow(new Error('key not found'));
             });
+
+            it('should be able to add before the first node', function addBeforeFirst() {
+                list.addBefore(0, 3, 'four');
+                expect(list.getFirst().getValue()).toEqual('four');
+            });
+
+            it('should be able to add after the last node', function addAfterLast() {
+                list.addAfter(2, 3, 'four');
+                expect(list.getLast().getValue()).toEqual('four');
+            });
+
+            it('should be able to loop through an list', function loop() {
+                for (var node = list.getFirst(); node; node = node.getNext()) {
+                }
+                expect(node).toEqual(null);
+            });
         });
     });
 }());
