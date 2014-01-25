@@ -119,6 +119,8 @@
                 if (nextNode !== null) {
                     nextNode.setPrevious(newNode);
                     newNode.setNext(nextNode);
+                } else {
+                    this.private.last = newNode;
                 }
                 node.setNext(newNode);
                 newNode.setPrevious(node);
@@ -135,6 +137,8 @@
                 if (previousNode !== null) {
                     previousNode.setNext(newNode);
                     newNode.setPrevious(previousNode);
+                } else {
+                    this.private.first = newNode;
                 }
                 node.setPrevious(newNode);
                 newNode.setNext(node);
