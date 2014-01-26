@@ -182,6 +182,14 @@
 
             var dog;
 
+            var Cat = clazz(function Cat() {
+                this.extend = 'Animal';
+            });
+
+            var Kitten = clazz(function Kitten() {
+                this.extend = 'Cat'
+            });
+
             beforeEach(function beforeEach() {
                 dog = new Dog('Harley', 'woof');
             });
@@ -206,6 +214,16 @@
 
             it('should be able to get the super constructor', function superConstructor() {
                 expect(dog.sayHi()).toEqual('woof');
+            });
+
+            it('should be able to extend an parent while the child is empty', function () {
+                var cat = new Cat();
+                expect(cat.getAge()).toEqual(0);
+            });
+
+            it('should be able to extend an parent who is extended', function () {
+                var kitten = new Kitten();
+                expect(kitten.getAge()).toEqual(0);
             });
         });
 

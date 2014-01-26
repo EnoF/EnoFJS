@@ -50,32 +50,7 @@
      * @returns {Object} the class scope
      */
     function generateClassScope(scope, newClass) {
-        var instanceScope = {
-            private: newClass.private,
-            protected: newClass.protected,
-            public: newClass.public
-        };
-        if (newClass.extend !== undefined) {
-            var parentInstance = new registeredClasses[newClass.extend]();
-            var parentInstanceScope = {
-                private: parentInstance.private,
-                protected: parentInstance.protected,
-                public: parentInstance.public
-            };
-            instanceScope.super = {};
-
-            generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.private, parentInstance.private,
-                instanceScope.super);
-            generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.protected, parentInstance.protected,
-                instanceScope.super);
-            generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.public, parentInstance.public,
-                instanceScope.super);
-
-            instanceScope.super.constructor = modifyFunctionScope(parentInstanceScope, parentInstance.constructor);
-
-            mergeAndOverrideParent(instanceScope.protected, parentInstanceScope.protected);
-            mergeAndOverrideParent(instanceScope.public, parentInstanceScope.public);
-        }
+        var instanceScope = getExtend(newClass);
 
         generateInstanceScopeMembers(instanceScope, instanceScope.private, newClass.private);
         generateInstanceScopeMembers(instanceScope, instanceScope.protected, newClass.protected);
@@ -84,6 +59,43 @@
         generateInstanceScopeMembers(instanceScope, scope, newClass.public);
 
         return instanceScope;
+    }
+
+    function normalizeInstance(instance) {
+        instance.private = instance.private || {};
+        instance.protected = instance.protected || {};
+        instance.public = instance.public || {};
+    }
+
+    function getExtend(instance) {
+        normalizeInstance(instance);
+        if (instance.extend !== undefined) {
+            var parent = getExtend(new registeredClasses[instance.extend]());
+            extendParent(instance, parent);
+        }
+
+        return instance;
+    }
+
+    function extendParent(childScope, parentInstance) {
+        var parentInstanceScope = {
+            private: parentInstance.private,
+            protected: parentInstance.protected,
+            public: parentInstance.public
+        };
+        childScope.super = {};
+
+        generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.private, parentInstance.private,
+            childScope.super);
+        generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.protected, parentInstance.protected,
+            childScope.super);
+        generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.public, parentInstance.public,
+            childScope.super);
+
+        childScope.super.constructor = modifyFunctionScope(parentInstanceScope, parentInstance.constructor);
+
+        mergeAndOverrideParent(childScope.protected, parentInstanceScope.protected);
+        mergeAndOverrideParent(childScope.public, parentInstanceScope.public);
     }
 
     /**
