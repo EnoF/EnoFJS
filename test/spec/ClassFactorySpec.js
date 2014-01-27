@@ -184,10 +184,18 @@
 
             var Cat = clazz(function Cat() {
                 this.extend = 'Animal';
+
+                this.constructor = function constructor() {
+                    this.super.constructor('miaow');
+                };
             });
 
             var Kitten = clazz(function Kitten() {
                 this.extend = 'Cat'
+
+                this.constructor = function constructor() {
+                    this.super.constructor();
+                };
             });
 
             beforeEach(function beforeEach() {
