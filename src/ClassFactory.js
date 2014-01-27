@@ -65,6 +65,7 @@
         instance.private = instance.private || {};
         instance.protected = instance.protected || {};
         instance.public = instance.public || {};
+        instance.super = instance.super || {};
     }
 
     function getExtend(instance) {
@@ -81,9 +82,9 @@
         var parentInstanceScope = {
             private: parentInstance.private,
             protected: parentInstance.protected,
-            public: parentInstance.public
+            public: parentInstance.public,
+            super: parentInstance.super
         };
-        childScope.super = {};
 
         generateInstanceScopeMembers(parentInstanceScope, parentInstanceScope.private, parentInstance.private,
             childScope.super);
