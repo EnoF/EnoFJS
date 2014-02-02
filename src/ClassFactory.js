@@ -13,6 +13,7 @@
      * @value {Function} OriginalClass
      */
     var registeredClasses = {};
+    var registeredEnoFJSClasses = {};
 
     /**
      * A class factory, the new class will be stripped of
@@ -38,6 +39,13 @@
 
             newClass.constructor.apply(instanceScope, arguments);
         }
+
+        var instance = new NewClass();
+        if (instance.extend !== undefined) {
+            EnoFJSClass.prototype = new registeredEnoFJSClasses[instance.extend]();
+        }
+
+        registeredEnoFJSClasses[className] = EnoFJSClass;
 
         return EnoFJSClass;
     };

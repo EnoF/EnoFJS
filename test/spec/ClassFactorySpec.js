@@ -185,8 +185,13 @@
             var Cat = clazz(function Cat() {
                 this.extend = 'Animal';
 
+                this.protected = {
+                    name: null
+                };
+
                 this.constructor = function constructor() {
                     this.super.constructor('miaow');
+                    this.public.setName('puss in boots');
                 };
             });
 
@@ -195,6 +200,7 @@
 
                 this.constructor = function constructor() {
                     this.super.constructor();
+                    this.public.setName('hello kitty');
                 };
             });
 
@@ -232,6 +238,18 @@
             it('should be able to extend an parent who is extended', function () {
                 var kitten = new Kitten();
                 expect(kitten.getAge()).toEqual(0);
+            });
+
+            it('should be able to override the parent protcted accessed by parent public', function () {
+                var kitten = new Kitten();
+                expect(kitten.getName()).toEqual('hello kitty');
+                var cat = new Cat();
+                expect(cat.getName()).toEqual('puss in boots');
+            });
+
+            it('should be the instance of the inherited class', function inherited(){
+                var kitten = new Kitten();
+                expect(kitten instanceof Animal).toEqual(true);
             });
         });
 
