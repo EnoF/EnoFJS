@@ -186,7 +186,13 @@
                 this.extend = 'Animal';
 
                 this.protected = {
-                    name: null
+                    name: null,
+                    lick: function lick() {
+                        throw new Error('Not implemented');
+                    },
+                    affect: function affect() {
+                        return this.protected.lick();
+                    }
                 };
 
                 this.constructor = function constructor() {
@@ -198,9 +204,16 @@
             var Kitten = clazz(function Kitten() {
                 this.extend = 'Cat'
 
+                this.protected = {
+                    lick: function lick() {
+                        return 'LICK!' + this.public.getName();
+                    }
+                };
+
                 this.constructor = function constructor() {
                     this.super.constructor();
                     this.public.setName('hello kitty');
+                    this.protected.affect();
                 };
             });
 
@@ -247,7 +260,7 @@
                 expect(cat.getName()).toEqual('puss in boots');
             });
 
-            it('should be the instance of the inherited class', function inherited(){
+            it('should be the instance of the inherited class', function inherited() {
                 var kitten = new Kitten();
                 expect(kitten instanceof Animal).toEqual(true);
             });
