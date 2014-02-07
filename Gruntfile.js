@@ -37,12 +37,25 @@ module.exports = function (grunt) {
                 configFile: 'test/karma.conf.js',
                 background: true
             }
+        },
+        uglify: {
+            dist: {
+                files: {
+                    'dist/enofjs/min.class.js': [
+                        'src/ClassFactory.js'
+                    ],
+                    'dist/enofjs/min.enof.js': [
+                        'src/*.js'
+                    ]
+                }
+            }
         }
     });
 
     grunt.registerTask('test', [
         'jshint',
-        'karma:unit'
+        'karma:unit',
+        'uglify'
     ]);
 
     grunt.registerTask('default', [

@@ -103,8 +103,8 @@
 
         childScope.super.constructor = modifyFunctionScope(parentInstanceScope, parentInstance.constructor);
 
-        mergeAndOverrideParent(childScope.protected, parentInstanceScope.protected);
-        mergeAndOverrideParent(childScope.public, parentInstanceScope.public);
+        mergeAndOverrideParent(childScope, childScope.protected, parentInstanceScope.protected);
+        mergeAndOverrideParent(childScope, childScope.public, parentInstanceScope.public);
     }
 
     /**
@@ -165,10 +165,12 @@
      * @param child {Object}
      * @param parent {Object}
      */
-    function mergeAndOverrideParent(child, parent) {
+    function mergeAndOverrideParent(scope, child, parent) {
         for (var member in parent) {
             if (parent.hasOwnProperty(member) && !child.hasOwnProperty(member)) {
                 child[member] = parent[member];
+            } else if (parent.hasOwnProperty(member) && child.hasOwnProperty(member)) {
+                parent[member] = modifyFunctionScope(scope, child[member]);
             }
         }
     }
