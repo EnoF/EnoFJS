@@ -253,6 +253,9 @@
             getSize: function getSize() {
                 return this.private.count;
             },
+            isEmpty: function isEmpty() {
+                return this.private.count === 0;
+            },
             /**
              * Removes a node with a given key
              *

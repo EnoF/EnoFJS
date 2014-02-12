@@ -43,6 +43,13 @@
                 expect(list.removeFirst()).toEqual(false);
                 expect(list.removeLast()).toEqual(false);
             });
+
+            it('should return true when the map is empty, but false when it is not', function emptyMap() {
+                var list = new LinkedHashMap();
+                expect(list.isEmpty()).toEqual(true);
+                list.add(0, 'hello');
+                expect(list.isEmpty()).toEqual(false);
+            });
         });
 
         describe('modifying an LinkedHashMap', function modifyLinkedHashMapSpecs() {
