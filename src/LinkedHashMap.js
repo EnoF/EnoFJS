@@ -250,6 +250,9 @@
             getLast: function getLast() {
                 return this.private.last;
             },
+            getSize: function getSize() {
+                return this.private.count;
+            },
             /**
              * Removes a node with a given key
              *

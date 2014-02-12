@@ -156,6 +156,10 @@
                 }
                 expect(node).toEqual(null);
             });
+
+            it('should return the size of the list', function getSize() {
+                expect(list.getSize()).toEqual(3);
+            });
         });
     });
 }());
