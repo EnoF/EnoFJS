@@ -94,7 +94,9 @@
                 var key = node.getKey();
                 if (node === this.private.first) {
                     this.private.first = this.private.first.getNext();
-                    this.private.first.setPrevious(null);
+                    if (this.private.first instanceof Node) {
+                        this.private.first.setPrevious(null);
+                    }
                 } else if (node === this.private.last) {
                     this.private.last = this.private.last.getPrevious();
                     this.private.last.setNext(null);
@@ -102,6 +104,7 @@
                     node.getPrevious().setNext(node.getNext());
                     node.getNext().setPrevious(node.getPrevious());
                 }
+                this.private.count--;
                 delete this.private.hashMap[key];
             }
         };
