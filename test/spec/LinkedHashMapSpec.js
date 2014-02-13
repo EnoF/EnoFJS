@@ -114,6 +114,13 @@
                 expect(first.getPrevious()).toEqual(null);
             });
 
+            it('should be able to delete all entries', function removeFirstWithRemove() {
+                list.remove(0);
+                list.remove(1);
+                list.remove(2);
+                expect(list.isEmpty()).toEqual(true);
+            });
+
             it('should be able to remove the last entry', function removeLast() {
                 list.removeLast();
                 var last = list.getLast();
