@@ -112,7 +112,7 @@ Extending a class
     });
 
     var Dog = clazz(function Dog() {
-        this.extend = Animal;
+        this.extend = 'Animal';
 
         this.constructor = function(birthDate){
             this.super.constructor(birthDate);
