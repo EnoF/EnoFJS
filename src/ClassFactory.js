@@ -134,10 +134,15 @@
             if (!members.hasOwnProperty(member)) {
                 continue;
             }
-            if (typeof members[member] === 'function') {
-                thisInstanceScope[member] = modifyFunctionScope(scope, members[member]);
+            var memberValue = members[member];
+
+            if (memberValue instanceof Object &&
+                memberValue.getSet !== undefined) {
+                generateAutoGetSet(scope, thisInstanceScope, member, memberValue.getSet, superScope);
+            } else if (typeof memberValue === 'function') {
+                thisInstanceScope[member] = modifyFunctionScope(scope, memberValue);
             } else {
-                thisInstanceScope[member] = members[member];
+                thisInstanceScope[member] = memberValue;
             }
             if (superScope instanceof Object) {
                 superScope[member] = thisInstanceScope[member];
@@ -174,4 +179,20 @@
             }
         }
     }
+
+    function generateAutoGetSet(scope, thisInstanceScope, member, value) {
+        var getter = ('get' + member.capitaliseFirstLetter());
+        var setter = ('set' + member.capitaliseFirstLetter());
+        thisInstanceScope[member] = value;
+        scope.public[getter] = function generatedGet() {
+            return thisInstanceScope[member];
+        };
+        scope.public[setter] = function generatedSet(newValue) {
+            thisInstanceScope[member] = newValue;
+        };
+    }
+
+    String.prototype.capitaliseFirstLetter = function capitaliseFirstLetter() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    };
 }(window));
