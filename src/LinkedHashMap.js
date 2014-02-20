@@ -12,36 +12,17 @@
      */
     var Node = clazz(function Node() {
         this.private = {
-            key: null,
-            value: null,
-            previous: null,
-            next: null
-        };
-
-        this.public = {
-            getKey: function getKey() {
-                return this.private.key;
+            key: {
+                getSet: null
             },
-            setKey: function setKey(key) {
-                this.private.key = key;
+            value: {
+                getSet: null
             },
-            getValue: function getValue() {
-                return this.private.value;
+            previous: {
+                getSet: null
             },
-            setValue: function setValue(value) {
-                this.private.value = value;
-            },
-            getPrevious: function getPrevious() {
-                return this.private.previous;
-            },
-            setPrevious: function setPrevious(previous) {
-                this.private.previous = previous;
-            },
-            getNext: function getNext() {
-                return this.private.next;
-            },
-            setNext: function setNext(next) {
-                this.private.next = next;
+            next: {
+                getSet: null
             }
         };
 
