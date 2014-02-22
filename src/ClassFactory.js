@@ -137,8 +137,8 @@
             var memberValue = members[member];
 
             if (memberValue instanceof Object &&
-                memberValue.getSet !== undefined) {
-                generateAutoGetSet(scope, thisInstanceScope, member, memberValue.getSet, superScope);
+                (hasGet(memberValue) || hasSet(memberValue))) {
+                generateAutoGetSet(scope, thisInstanceScope, member, memberValue, superScope);
             } else if (typeof memberValue === 'function') {
                 thisInstanceScope[member] = modifyFunctionScope(scope, memberValue);
             } else {
@@ -180,16 +180,46 @@
         }
     }
 
-    function generateAutoGetSet(scope, thisInstanceScope, member, value) {
+    function hasGet(value) {
+        return value.hasOwnProperty('get') || value.hasOwnProperty('getSet');
+    }
+
+    function hasSet(value) {
+        return value.hasOwnProperty('set') || value.hasOwnProperty('getSet');
+    }
+
+    function generateAutoGet(scope, thisInstanceScope, member) {
         var getter = ('get' + member.capitaliseFirstLetter());
-        var setter = ('set' + member.capitaliseFirstLetter());
-        thisInstanceScope[member] = value;
         scope.public[getter] = function generatedGet() {
             return thisInstanceScope[member];
         };
+    }
+
+    function generateAutoSet(scope, thisInstanceScope, member) {
+        var setter = ('set' + member.capitaliseFirstLetter());
         scope.public[setter] = function generatedSet(newValue) {
             thisInstanceScope[member] = newValue;
         };
+    }
+
+    function getDefaultValue(value) {
+        if (value.hasOwnProperty('get')) {
+            return value.get;
+        } else if (value.hasOwnProperty('set')) {
+            return value.set;
+        } else {
+            return value.getSet;
+        }
+    }
+
+    function generateAutoGetSet(scope, thisInstanceScope, member, value) {
+        if (hasGet(value)) {
+            generateAutoGet(scope, thisInstanceScope, member);
+        }
+        if (hasSet(value)) {
+            generateAutoSet(scope, thisInstanceScope, member);
+        }
+        thisInstanceScope[member] = getDefaultValue(value);
     }
 
     String.prototype.capitaliseFirstLetter = function capitaliseFirstLetter() {
