@@ -137,7 +137,7 @@
             var memberValue = members[member];
 
             if (memberValue instanceof Object &&
-                (hasGet(memberValue) || hasSet(memberValue))) {
+                (hasGet(memberValue) || hasSet(memberValue) || hasIs(memberValue))) {
                 generateAutoGetSet(scope, thisInstanceScope, member, memberValue, superScope);
             } else if (typeof memberValue === 'function') {
                 thisInstanceScope[member] = modifyFunctionScope(scope, memberValue);
@@ -185,7 +185,12 @@
     }
 
     function hasSet(value) {
-        return value.hasOwnProperty('set') || value.hasOwnProperty('getSet');
+        return value.hasOwnProperty('set') || value.hasOwnProperty('getSet') ||
+            value.hasOwnProperty('isSet');
+    }
+
+    function hasIs(value) {
+        return value.hasOwnProperty('is') || value.hasOwnProperty('isSet');
     }
 
     function generateAutoGet(scope, thisInstanceScope, member) {
@@ -202,11 +207,22 @@
         };
     }
 
+    function generateAutoIs(scope, thisInstanceScope, member) {
+        var is = ('is' + member.capitaliseFirstLetter());
+        scope.public[is] = function generatedIs() {
+            return thisInstanceScope[member];
+        };
+    }
+
     function getDefaultValue(value) {
         if (value.hasOwnProperty('get')) {
             return value.get;
         } else if (value.hasOwnProperty('set')) {
             return value.set;
+        } else if (value.hasOwnProperty('is')) {
+            return value.is;
+        } else if (value.hasOwnProperty('isSet')) {
+            return value.isSet;
         } else {
             return value.getSet;
         }
@@ -215,6 +231,8 @@
     function generateAutoGetSet(scope, thisInstanceScope, member, value) {
         if (hasGet(value)) {
             generateAutoGet(scope, thisInstanceScope, member);
+        } else if (hasIs(value)) {
+            generateAutoIs(scope, thisInstanceScope, member);
         }
         if (hasSet(value)) {
             generateAutoSet(scope, thisInstanceScope, member);

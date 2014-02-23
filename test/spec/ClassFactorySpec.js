@@ -26,6 +26,12 @@
                     },
                     autoSet: {
                         set: 'nothing yet'
+                    },
+                    autoIsSet: {
+                        isSet: false
+                    },
+                    autoIs: {
+                        is: true
                     }
                 };
 
@@ -73,6 +79,9 @@
                     },
                     getAutoSettedValue: function getAutoSettedValue() {
                         return this.private.autoSet;
+                    },
+                    setAutoIsSetter: function isAutoIsGetter(value) {
+                        this.private.autoIs = value;
                     }
                 };
 
@@ -146,6 +155,18 @@
                 expect(classConstructorTestClass.getAutoSettedValue()).toEqual('nothing yet');
                 classConstructorTestClass.setAutoSet('setter');
                 expect(classConstructorTestClass.getAutoSettedValue()).toEqual('setter');
+            });
+
+            it('should automatically generate a is and setter for an member', function autoIsSet() {
+                expect(classConstructorTestClass.isAutoIsSet()).toEqual(false);
+                classConstructorTestClass.setAutoIsSet(true);
+                expect(classConstructorTestClass.isAutoIsSet()).toEqual(true);
+            });
+
+            it('should automatically generate a is for an member', function autoIs() {
+                expect(classConstructorTestClass.isAutoIs()).toEqual(true);
+                classConstructorTestClass.setAutoIsSetter(false);
+                expect(classConstructorTestClass.isAutoIs()).toEqual(false);
             });
         });
 
