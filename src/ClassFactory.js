@@ -25,7 +25,7 @@
      * @returns {EnoFJSClass} A generated class
      */
     window.clazz = function clazz(NewClass) {
-        var className = extractClassName(NewClass);
+        var className = NewClass.extractClassName();
 
         registeredClasses[className] = NewClass;
 
@@ -109,15 +109,14 @@
 
     /**
      * Extract the class name from a function
-     * @param NewClass the new class to be generated
      * @returns {String}
      */
-    function extractClassName(NewClass) {
-        var NewClassName = NewClass.toString();
-        NewClassName = NewClassName.substr('function '.length);
-        NewClassName = NewClassName.substr(0, NewClassName.indexOf('('));
-        return NewClassName;
-    }
+    Function.prototype.extractClassName = function extractClassName() {
+        var functionName = this.toString();
+        functionName = functionName.substr('function '.length);
+        functionName = functionName.substr(0, functionName.indexOf('('));
+        return functionName;
+    };
 
     /**
      * Generate the members of the provided class onto the generated class
