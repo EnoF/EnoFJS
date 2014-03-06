@@ -1,5 +1,7 @@
 EnoFJS
 ======
+Inheritance
+-----------
 Javascript supports private and public out of the box. However
 inheritance is often claimed impossible or done with prototype.
 
@@ -8,117 +10,57 @@ however implies that all inheritable properties have to be public
 and all properties should be public in case a function in the
 prototype needs to access it.
 
-Goal
-----
-EnoFJS is purpose is to make it easy to handle inheritance and
-making it visible what the accessibility is of an property.
+To make this possible, EnoFJS implements a ClassFactory, handling
+all the trouble of scoping and inheriting.
 
-Support
--------
-EnoFJS supports:
- * public scoping
- * private scoping
- * protected scoping
- * extending
- * super access
-
-Examples
---------
-Declaring an empty class
-
-    var Animal = clazz(function Animal() {
-
-    });
-
-    var animal = new Animal();
-    
-Declaring private scope
-
-    var Animal = clazz(function Animal() {
-        this.private = {
-            privateFoo: 'foo',
-            privateBar: function privateBar() {
-            }
-        };
-
-        this.constructor = function constructor(){
-        };
-    });
-    
-Declaring public scope
-
-    var Animal = clazz(function Animal() {
-        this.public = {
-            publicFoo: 'foo',
-            publicBar: function privateBar() {
-            }
-        };
-
-        this.constructor = function constructor(){
-        };
-    });
-
-Declaring protected scope
-
-    var Animal = clazz(function Animal() {
-        this.protected = {
-            protectedFoo: 'foo',
-            protectedBar: function privateBar() {
-            }
-        };
-
-        this.constructor = function constructor(){
-        };
-    });
-
-Declaring a constructor
-
-    var Animal = clazz(function Animal() {
-        this.private = {
-            privateFoo: null,
-            privateBar: function privateBar() {
-            }
-        };
-
-        this.constructor = function constructor(foo){
-            this.private.foo = foo;
-        };
-    });
-
-Extending a class
-
-    var Animal = clazz(function Animal() {
-        this.private = {
-            birthDate: new Date()
-        };
-
-        this.protected = {
-            formatBirthDate: function formatBirthDate() {
-                return this.private.birthDate.toString();
-            }
-        };
-
-        this.public = {
-            getBirthDate: function getBirthDate() {
-                return 'I am born at' + this.protected.formatBirthDate();
-            };
-        };
-
-        this.constructor = function constructor(birthDate){
-            if(birthDate instanceof Date){
-                this.private.birthDate = birthDate;
-            }
-        };
-    });
-
-    var Dog = clazz(function Dog() {
+    var Dog = clazz(function Dog(name){
         this.extend = 'Animal';
 
-        this.constructor = function(birthDate){
-            this.super.constructor(birthDate);
+        this.private = {
+            name: null
         };
+
+        this.protected = {
+            nickName: {
+                getSet: null
+            }
+        };
+
+        this.public = {
+            barkName: function barkName(){
+                return 'Woof, my name is ' + this.private.name +
+                    ', but you can call me ' +
+                    this.protected.nickName + '!';
+            }
+        };
+
     });
+    var dog = new Dog('fluffy duffy');
+    dog.setNickName('fluffy');
+    expect(dog.barkName()).
+        toEqual('Woof, my name is fluffy duffy' +
+                ', but you can call me fluffy!');
 
-    var dog = new Dog(new Date());
+LinkedHashMap
+-------------
+A LinkedHashMap has the advantage of a LinkedList, able to quickly
+add or remove a Node between already existing nodes. However a LinkedList is slower
+in finding an entry in the middle of the list, because it has to search
+through the entire list!
 
-For more details take a look at the [ClassFactorySpec](test/spec/ClassFactorySpec.js)
+With the implementation of a LinkedHashMap, it keeps the ability to insert
+or remove nodes like a LinkedList. For searching the implementation of a HashMap
+is used. This way you have best of both worlds!
+
+    var list = new LinkedHashMap();
+    list.add(0, 'one');
+    list.add(1, 'two');
+    list.add(2, 'three');
+    expect(list.get(1).getValue()).toEqual('two');
+    list.addAfter('an non integer key', 'four');
+    expect(list.get('an non integer key').getNext().
+                        getValue()).toEqual('three');
+
+WhereIt
+-------
+W.I.P.

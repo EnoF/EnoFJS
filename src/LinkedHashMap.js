@@ -1,15 +1,16 @@
-/*
- * Copyright (c) 2014. 
- *
- * @Author Andy Tang
- */
+//      EnoFJS v1.1.3
+
+//      Copyright (c) 2014.
+//
+//      Author Andy Tang
+//      Fork me on Github: https://github.com/EnoF/EnoFJS
 (function LinkedHashMapScope(window, clazz, undefined) {
     'use strict';
 
-    /**
-     * A node containing a key value pair
-     * @type {Node}
-     */
+    // A `Node` containing a `key` `value` pair.
+    // The `key` supports the types integer and string.
+    // The `value` however can be of any type.
+    // The `Node` will also have, when applicable, a reference to it's neighbors in the list.
     var Node = clazz(function Node() {
         this.private = {
             key: {
@@ -32,98 +33,107 @@
         };
     });
 
-    /**
-     * LinkedHashMap contains a map of key and a Node
-     * The Node will have a reference to the neighbour nodes,
-     * similar to a LinkedList
-     *
-     * @type {LinkedHashMap}
-     */
+    // LinkedHashMap contains an HashMap.
+    // The key is identical to the key of the Node it will store.
+    // The value is the Node.
+
+    //      var list = new LinkedHashMap();
     window.LinkedHashMap = clazz(function LinkedHashMap() {
         this.private = {
             duplicateKeyError: 'key already exists in LinkedHashMap',
             keyNotFoundError: 'key not found',
-            count: 0,
-            first: null,
-            last: null,
+            size: {
+                get: 0
+            },
+            first: {
+                get: null
+            },
+            last: {
+                get: null
+            },
             hashMap: {},
 
-            /**
-             * Add a new entry to the hashMap
-             *
-             * @throws key already exists in LinkedHashMap
-             * @param key {Integer|String} the key that will be used to reference the node
-             * @param value {*}the value that will be stored in the node
-             * @returns {Node}
-             */
+            // Add a new entry to the HashMap.
             add: function add(key, value) {
+                // Throw an error when the key already exists inside of the HashMap.
                 if (this.private.hashMap.hasOwnProperty(key)) {
                     throw new Error(this.private.duplicateKeyError);
                 }
                 var newNode = new Node(key, value);
                 this.private.hashMap[key] = newNode;
-                this.private.count++;
+                this.private.size++;
                 return newNode;
             },
 
-            /**
-             * Remove an entry from the hashMap and removes all
-             * references to the node to be removed
-             * @param node {Node} the node that will be removed
-             */
+            // Remove an entry from the hashMap and removes all
+            // references to the node to be removed.
             remove: function remove(node) {
                 var key = node.getKey();
+
+                // If the node is also the first entry of the LinkedHashMap,
+                // then we should promote the next node as the new first entry!
                 if (node === this.private.first) {
                     this.private.first = this.private.first.getNext();
                     if (this.private.first instanceof Node) {
+                        // Also make sure to remove the reference to the node
+                        // that is going to be deleted.
+                        // We don't want any ghosts around here!
                         this.private.first.setPrevious(null);
                     }
-                } else if (node === this.private.last) {
+                }
+                // If the node is the last entry of the LinkedHashMap,
+                // then we should promote the previous node as the new last entry!
+                else if (node === this.private.last) {
+                    // Since we already checked that this node is not the first node, we can
+                    // safely assume that there is an previous node.
                     this.private.last = this.private.last.getPrevious();
                     this.private.last.setNext(null);
-                } else {
+                }
+                // When the node is in the middle, we have to remove the references
+                // from the neighbors and let them point to each other instead.
+                else {
                     node.getPrevious().setNext(node.getNext());
                     node.getNext().setPrevious(node.getPrevious());
                 }
-                this.private.count--;
+                // Now lets remove :)
+                this.private.size--;
                 delete this.private.hashMap[key];
             }
         };
 
         this.protected = {
 
-            /**
-             * Adds a new node after the given node
-             *
-             * @param node {Node} a reference node where the new node will be added after
-             * @param newNode {Node} the new node to be added
-             */
+            // Add a new node after the given node
             addAfter: function addAfter(node, newNode) {
                 var nextNode = node.getNext();
+                // If the given node isn't the `last` node, make sure to update the references.
                 if (nextNode !== null) {
                     nextNode.setPrevious(newNode);
                     newNode.setNext(nextNode);
-                } else {
+                }
+                // Otherwise we have to update the `last` reference.
+                else {
                     this.private.last = newNode;
                 }
+                // Point the two nodes to each other, as they have become neighbors :)
                 node.setNext(newNode);
                 newNode.setPrevious(node);
             },
 
-            /**
-             * Adds a new node before the given node
-             *
-             * @param node {Node} a reference node where the new node will be added before
-             * @param newNode {Node} the new node to be added
-             */
+            // Adds a new node before the given node.
             addBefore: function addBefore(node, newNode) {
                 var previousNode = node.getPrevious();
+                // If the `node` reference isn't the first node,
+                // make sure to exchange contacts.
                 if (previousNode !== null) {
                     previousNode.setNext(newNode);
                     newNode.setPrevious(previousNode);
-                } else {
+                }
+                // Otherwise we have to let the `LinkedHashMap` know who is first!
+                else {
                     this.private.first = newNode;
                 }
+                // The new node should say hello to the node he is living in front of now.
                 node.setPrevious(newNode);
                 newNode.setNext(node);
             }
@@ -131,19 +141,10 @@
 
         this.public = {
 
-            /**
-             * Add a new key value pair to the LinkedHashMap
-             * The newly added node will update the last node to point to
-             * this new node.
-             *
-             * @throws key already exists in LinkedHashMap
-             * @param key {Integer|String} the key which will serve as a reference point
-             * @param value {*} the value to be stored
-             * @returns {Node}
-             */
+            // Add a new key value pair to the LinkedHashMap.
             add: function add(key, value) {
                 var newNode = this.private.add(key, value);
-                if (this.private.count === 1) {
+                if (this.private.size === 1) {
                     this.private.first = newNode;
                 } else {
                     this.protected.addAfter(this.private.last, newNode);
@@ -153,16 +154,9 @@
                 return newNode;
             },
 
-            /**
-             * Adds a new node after a given node key
-             *
-             * @param nodeKeyToInsertAfter {Integer|String} the key of the node
-             *        the new node has to be added after
-             * @param newKey {Integer|String} the key of the new node
-             * @param newValue {*} the value of the new node
-             * @throws key not found
-             * @returns {Node}
-             */
+            // Adds a new node after a given node key.
+            // First we look up the `key`, then we introduce the new `node` after
+            // the looked up `node`.
             addAfter: function addAfter(nodeKeyToInsertAfter, newKey, newValue) {
                 var newNode = this.private.add(newKey, newValue);
                 var nodeToInsertAfter = this.public.getById(nodeKeyToInsertAfter);
@@ -170,16 +164,9 @@
                 return newNode;
             },
 
-            /**
-             * Adds a new node before a given node key
-             *
-             * @param nodeKeyToInsertBefore {Integer|String} the key of the node
-             *        the new node has to be added before
-             * @param newKey {Integer|String} the key of the new node
-             * @param newValue {*)
-             * @throws key not found
-             * @returns {Node}
-             */
+            // Adds a new node before a given node key.
+            // Again we look up the `node` bound to the given `key` and then we introduce
+            // the new `node` before this `node`.
             addBefore: function addBefore(nodeKeyToInsertBefore, newKey, newValue) {
                 var newNode = this.private.add(newKey, newValue);
                 var nodeToInsertBefore = this.public.getById(nodeKeyToInsertBefore);
@@ -187,40 +174,27 @@
                 return newNode;
             },
 
-            /**
-             * Adds a new node at the first position
-             *
-             * @param newKey {Integer|String} the key for the new node
-             * @param newValue {*} the value of the new node
-             * @returns {Node}
-             */
+            // Adds a new node at the first position.
+            // We have a new first comer!
             addFirst: function addFirst(newKey, newValue) {
                 var newNode = this.private.add(newKey, newValue);
                 var first = this.private.first;
+                // If there was an other node on the first place,
+                // let him know who is now number one!
                 if (first !== null) {
                     this.protected.addBefore(first, newNode);
                 }
                 return newNode;
             },
 
-            /**
-             * Adds a new node at the last position
-             *
-             * @param newKey {Integer|String} the key for the new node
-             * @param newValue {*} the value of the new node
-             * @returns {Node}
-             */
+            // Adds a new node at the last position.
+            // Similar to the add function, just to prevent the `addFirst` function
+            // from feeling lonely.
             addLast: function addLast(newKey, newValue) {
                 return this.public.add(newKey, newValue);
             },
 
-            /**
-             * Gets a node by id (key)
-             *
-             * @throws key not found
-             * @param key {Integer|String} the key of the node
-             * @returns {Node}
-             */
+            // Find a node reference by his key.
             getById: function getById(key) {
                 var node = this.private.hashMap[key];
                 if (node === undefined) {
@@ -228,24 +202,10 @@
                 }
                 return node;
             },
-            getFirst: function getFirst() {
-                return this.private.first;
-            },
-            getLast: function getLast() {
-                return this.private.last;
-            },
-            getSize: function getSize() {
-                return this.private.count;
-            },
             isEmpty: function isEmpty() {
-                return this.private.count === 0;
+                return this.private.size === 0;
             },
-            /**
-             * Removes a node with a given key
-             *
-             * @param key {Integer|String} key of the node to be removed
-             * @returns {}
-             */
+            // Find the node by it's key and kick it out of the list!
             remove: function remove(key) {
                 if (!this.private.hashMap.hasOwnProperty(key)) {
                     return false;
@@ -267,7 +227,6 @@
         };
 
         this.constructor = function constructor() {
-
         };
     });
 }(window, window.clazz));

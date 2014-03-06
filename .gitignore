@@ -177,9 +177,6 @@ node_modules
 #############
 ## Coverage
 #############
-/coverage
-/coverage/*.*
-/coverage/**/*.*
-/coverage/**/**/*.*
-/test/node_modules/**/*
-/test/node_modules/**/**.*
+coverage
+docs
+doc
