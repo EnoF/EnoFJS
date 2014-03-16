@@ -16,21 +16,15 @@ module.exports = function (grunt) {
                     'src/{,*/}*.js',
                     'test/spec/*Spec.js'
                 ],
-                tasks: ['karma:unitAuto:run', 'groc']
-            },
-            groc: {
-                files: [
-                    'README.md'
-                ],
-                tasks: ['groc']
+                tasks: ['karma:unitAuto:run']
             }
         },
         groc: {
             options: {
-                out: 'doc/'
+                out: '../EnoFJSdocs/'
             },
             javascript: [
-                'src/ClassFactory.js', 'src/LinkedHashMap.js', 'README.md'
+                'src/*.js', 'README.md'
             ]
         },
         jshint: {

@@ -1,30 +1,54 @@
-/*
- * Copyright (c) 2014. 
- *
- * @Author Andy Tang
- */
+//      EnoFJS v1.1.3
+
+//      Copyright (c) 2014.
+//
+//      Author Andy Tang
+//      Fork me on Github: https://github.com/EnoF/EnoFJS
 (function whereIt(it, LinkedHashMap) {
     'use strict';
 
-    function executeTest(description, test, matchedArguments) {
+    // Create new test cases, ready to be executed by Jasmine
+
+    //      whereIt('should add', function addNumbers(x, y, result){
+    //          expect(calulator.add(x, y)).toEqual(result);
+    //      }, [
+    //          {
+    //                x: 1,
+    //                y: 2,
+    //                result: 3
+    //          },
+    //          {
+    //              y: 200,
+    //              x: 2,
+    //              result: 202
+    //          }
+    //      ]);
+    window.whereIt = function whereIt(description, test, whereCases) {
+        for (var i = 0; i < whereCases.length; i++) {
+            // Before registering the tests, we match the Given arguments
+            // to the test cases.
+            registerTest(description, test, matchGiven(test, whereCases[i]));
+        }
+    };
+
+    // Register the test with the arguments as if the tests were
+    // registered normally through Jasmine.
+    function registerTest(description, test, matchedArguments) {
+        // First we extract the arguments so we can pass it to the test.
         var args = extractArguments(matchedArguments);
+        // Create a customized test description to easily recognize which test fails.
         it(createTestDescription(description, args), function executeTest() {
             test.apply(this, args);
         });
     }
 
+    // Lets make our tests identifiable by the parameters provided to the test case.
     function createTestDescription(description, args) {
         return description + ' [' + args + ']';
     }
 
-    /**
-     * Matches the given with the arguments, this way, you
-     * can rearrange the arguments as you wish
-     *
-     * @param test
-     * @param testArguments
-     * @returns {window.LinkedHashMap}
-     */
+    // Matches the given with the arguments, this way, you
+    // can rearrange the arguments as you wish.
     function matchGiven(test, testArguments) {
         var testAsString = test.toString();
         var list = new LinkedHashMap();
@@ -41,14 +65,7 @@
         return list;
     }
 
-    /**
-     * Adds the value at the correct place inside the list
-     *
-     * @param index
-     * @param testArgument
-     * @param list
-     * @returns {Node}
-     */
+    // Adds the value at the correct place inside the list.
     function placeAtRightPositionInList(index, testArgument, list) {
         for (var node = list.getFirst(); node; node = node.getNext()) {
             if (index < node.getKey()) {
@@ -58,12 +75,7 @@
         return list.add(index, testArgument);
     }
 
-    /**
-     * Converts the list of arguments to an array
-     *
-     * @param matchedArguments
-     * @returns {Array}
-     */
+    // Converts the list of arguments to an array.
     function extractArguments(matchedArguments) {
         var args = [];
         for (var node = matchedArguments.getFirst(); node; node = node.getNext()) {
@@ -72,16 +84,5 @@
         return args;
     }
 
-    /**
-     * Allows the test case to addapt multiple scenarios for the unit to be tested with
-     *
-     * @param description The description of the test
-     * @param test The test
-     * @param whereCases The given input and results
-     */
-    window.whereIt = function whereIt(description, test, whereCases) {
-        for (var i = 0; i < whereCases.length; i++) {
-            executeTest(description, test, matchGiven(test, whereCases[i]));
-        }
-    };
+
 }(window.it, window.LinkedHashMap));

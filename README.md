@@ -63,4 +63,23 @@ is used. This way you have best of both worlds!
 
 WhereIt
 -------
-W.I.P.
+The `whereIt` is an extention for the Jasmine test framework. Often you have a test cases
+where the same process will be executed with different parameters, expecting different
+results. The `whereIt` assists in doing this with a simple configuration!
+
+Configuration will be matched to the variable names!
+
+    whereIt('should add', function addNumbers(x, y, result){
+        expect(calulator.add(x, y)).toEqual(result);
+    }, [
+        {
+            x: 1,
+            y: 2,
+            result: 3
+        },
+        {
+            y: 200,
+            x: 2,
+            result: 202
+        }
+    ]);
