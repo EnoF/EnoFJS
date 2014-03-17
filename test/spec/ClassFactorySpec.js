@@ -357,6 +357,27 @@
 
                 };
             });
+
+            var Parent = clazz(function Parent() {
+                this.protected = {
+                    foo: 'foo'
+                };
+
+                this.public = {
+                    getFoo: function getFoo() {
+                        return this.protected.foo;
+                    }
+                };
+            });
+
+            var Child = clazz(function Child() {
+                this.extend = 'Parent';
+
+                this.protected = {
+                    foo: 'bar'
+                };
+            });
+
             var classConstructorTestClass;
 
             beforeEach(function beforeEach() {
@@ -368,6 +389,10 @@
                 expect(classConstructorTestClass.getBar()).toEqual('bar');
             });
 
+            it('should be able to override the parent without constructors', function override() {
+                var child = new Child();
+                expect(child.getFoo()).toEqual('bar');
+            });
         });
     });
 }());

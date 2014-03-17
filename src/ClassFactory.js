@@ -1,3 +1,4 @@
+
 //      EnoFJS v1.1.3
 
 //      Copyright (c) 2014.
@@ -224,8 +225,11 @@
         for (var member in parent) {
             if (parent.hasOwnProperty(member) && !child.hasOwnProperty(member)) {
                 child[member] = parent[member];
-            } else if (parent.hasOwnProperty(member) && child.hasOwnProperty(member)) {
+            } else if (parent.hasOwnProperty(member) && child.hasOwnProperty(member) &&
+                typeof child[member] === 'function') {
                 parent[member] = modifyFunctionScope(scope, child[member]);
+            } else if (parent.hasOwnProperty(member) && child.hasOwnProperty(member)) {
+                parent[member] = child[member];
             }
         }
     }
