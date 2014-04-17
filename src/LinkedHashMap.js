@@ -227,6 +227,7 @@
         };
 
         this.constructor = function constructor() {
+            this.private.hashMap = {};
         };
     });
 }(window, window.clazz));

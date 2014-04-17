@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. 
+ * Copyright (c) 2014.
  *
  * @Author Andy Tang
  */
