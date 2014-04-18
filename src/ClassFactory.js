@@ -269,6 +269,16 @@
         return functionName;
     };
 
+    // When an innerfunction will be passed down to an other function, it could be that the scope
+    // will be modified. Think of event handlers.
+    // Now you can pass the function with `this.private.getFoo.bind(this)`. This will preserve the scope.
+    Function.prototype.bindScope = function bindScope(scope) {
+        var self = this;
+        return function boundScope() {
+            return self.apply(scope, arguments);
+        };
+    };
+
     // **Getters, Setters and Issers**
 
     // `get || getSet`

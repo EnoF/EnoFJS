@@ -366,6 +366,9 @@
                 this.public = {
                     getFoo: function getFoo() {
                         return this.protected.foo;
+                    },
+                    reapply: function reapply() {
+                        this.public.getFoo.bindScope(this).apply({});
                     }
                 };
             });
@@ -392,6 +395,13 @@
             it('should be able to override the parent without constructors', function override() {
                 var child = new Child();
                 expect(child.getFoo()).toEqual('bar');
+            });
+
+            it('should be able to apply with a different scope', function applyDifferentScope() {
+                var parent = new Parent();
+                expect(function testing() {
+                    parent.reapply();
+                }).not.toThrow();
             });
         });
     });
