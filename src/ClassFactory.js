@@ -29,6 +29,8 @@
     function parseToPrototypedClass(className, NewClass) {
 
         var instance = normalizeInstance(new NewClass());
+        var parent;
+        var parentProto;
 
         // Generate Getters and Setters into the prototype.
         generateAutoIsGetSet('private', instance.private, instance.public);
@@ -36,8 +38,8 @@
 
         if (instance.extend !== undefined) {
             // Merge the parent properties into this instance.
-            var parent = registeredClasses[instance.extend];
-            var parentProto = extendParent(instance, parent);
+            parent = registeredClasses[instance.extend];
+            parentProto = extendParent(instance, parent);
         }
 
         // Create a prototyped class based on the instance.
