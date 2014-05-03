@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         },
         groc: {
             options: {
-                out: '../EnoFJSdocs/'
+                out: ''
             },
             javascript: [
                 'src/*.js', 'README.md'
@@ -46,6 +46,23 @@ module.exports = function (grunt) {
                 background: true
             }
         },
+        shell: {
+            prepare: {
+                command: 'rm -rf src test .jshintrc bower.json package.json'
+            },
+            addDocs: {
+                command: 'git add -A'
+            },
+            commit: {
+                command: 'git commit -m "update groc docs"'
+            },
+            push: {
+                command: 'git push origin master:gh-pages -f'
+            },
+            revert: {
+                command: 'git reset --hard HEAD~1'
+            }
+        },
         uglify: {
             dist: {
                 files: {
@@ -64,6 +81,15 @@ module.exports = function (grunt) {
         'jshint',
         'karma:unit',
         'uglify'
+    ]);
+
+    grunt.registerTask('update', [
+        'groc',
+        'shell:prepare',
+        'shell:addDocs',
+        'shell:commit',
+        'shell:push',
+        'shell:revert'
     ]);
 
     grunt.registerTask('default', [

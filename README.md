@@ -1,4 +1,4 @@
-EnoFJS
+EnoFJS [![Build Status](https://drone.io/github.com/EnoF/EnoFJS/status.png)](https://drone.io/github.com/EnoF/EnoFJS/latest)
 ======
 Inheritance
 -----------
