@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         },
         groc: {
             options: {
-                out: ''
+                out: './'
             },
             javascript: [
                 'src/*.js', 'README.md'
@@ -47,26 +47,29 @@ module.exports = function (grunt) {
             }
         },
         shell: {
-            prepare: {
-                command: 'rm -rf src test .jshintrc bower.json package.json'
+            checkout: {
+                command: 'git checkout master'
             },
-            init: {
-                command: 'git init'
+            prepare: {
+                command: 'rm -rf src/*.js test .jshintrc bower.json package.json'
             },
             user: {
                 command: 'git config user.name "Travis_CI"'
             },
             email: {
-                command: 'git config user.email "travis@enof.com'
+                command: 'git config user.email "travis@enof.com"'
             },
             addDocs: {
                 command: 'git add -A'
+            },
+            current: {
+                command: 'git branch'
             },
             commit: {
                 command: 'git commit -m "update groc docs"'
             },
             push: {
-                command: 'git push -f "https://${GH_TOKEN}@${GH_REF}'
+                command: 'git push -f --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages'
             },
             revert: {
                 command: 'git reset --hard HEAD~1'
@@ -93,13 +96,14 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('update', [
+        'shell:checkout',
         'groc',
         'shell:prepare',
-        'shell:init',
         'shell:user',
         'shell:email',
         'shell:addDocs',
         'shell:commit',
+        'shell:current',
         'shell:push',
         'shell:revert'
     ]);

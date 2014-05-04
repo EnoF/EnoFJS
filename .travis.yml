@@ -13,6 +13,6 @@ script:
   - "grunt update"
 env:
   global:
-    - GH_REF: "git@github.com:EnoF/EnoFJS.git"
+    - GH_REF: "github.com/EnoF/EnoFJS.git"
     - secure: "h+sqQADZb8ZHoTRzCMSVsdBc77IFI3Wnt6qw/Mb8pSCbqTXPy9aSe5bqnbEJ633+D5PU0ZBkg2rZfbxtVGSth
     /U8mrNWAhxYjNIyUMrXdhKFSyMIQMk7lnXm/tB0a3swy+grLrFWI3B7qLtgs+6FDqGXCxM16mSyUtAAhRn8y2A="
