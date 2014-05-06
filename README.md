@@ -1,5 +1,7 @@
-EnoFJS [![Build Status](https://drone.io/github.com/EnoF/EnoFJS/status.png)](https://drone.io/github.com/EnoF/EnoFJS/latest)
+EnoFJS
 ======
+[![Build Status](https://drone.io/github.com/EnoF/EnoFJS/status.png)](https://drone.io/github.com/EnoF/EnoFJS/latest)
+[![Code Climate](https://codeclimate.com/github/EnoF/EnoFJS.png)](https://codeclimate.com/github/EnoF/EnoFJS)
 Inheritance
 -----------
 Javascript supports private and public out of the box. However
