@@ -1,38 +1,39 @@
 {
-    "name": "enofjs",
-    "description": "Enhancing javascript",
-    "version": "1.2.0",
-    "dependencies": {},
-    "devDependencies": {
-        "grunt": "^0.4",
-        "load-grunt-tasks": "^0.1",
-        "grunt-contrib-jshint": "^0.6",
-        "grunt-contrib-watch": "^0.5",
-        "grunt-contrib-uglify": "^0.2",
-        "time-grunt": "^0.1",
-        "grunt-karma": "^0.6",
-        "karma-script-launcher": "^0.1",
-        "karma-chrome-launcher": "^0.1",
-        "karma-firefox-launcher": "^0.1",
-        "karma-html2js-preprocessor": "^0.1",
-        "karma-requirejs": "^0",
-        "karma-jasmine": "^0.1",
-        "karma-coffee-preprocessor": "^0.1",
-        "karma-phantomjs-launcher": "^0.1",
-        "karma": "^0.10",
-        "karma-ng-html2js-preprocessor": "^0.1",
-        "karma-coverage": "^0.1.0",
-        "grunt-groc": "^0.4",
-        "grunt-shell": "^0.7"
-    },
-    "engines": {
-        "node": ">=0.10"
-    },
-    "scripts": {
-        "test": "grunt test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:EnoF/EnoFJS.git"
-    }
+  "name": "enofjs",
+  "description": "Enhancing javascript",
+  "version": "1.2.1",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4",
+    "load-grunt-tasks": "^0.1",
+    "grunt-contrib-jshint": "^0.6",
+    "grunt-contrib-watch": "^0.5",
+    "grunt-contrib-uglify": "^0.2",
+    "time-grunt": "^0.1",
+    "grunt-karma": "^0.6",
+    "karma-script-launcher": "^0.1",
+    "karma-chrome-launcher": "^0.1",
+    "karma-firefox-launcher": "^0.1",
+    "karma-html2js-preprocessor": "^0.1",
+    "karma-requirejs": "^0",
+    "karma-jasmine": "^0.1",
+    "karma-coffee-preprocessor": "^0.1",
+    "karma-phantomjs-launcher": "^0.1",
+    "karma": "^0.10",
+    "karma-ng-html2js-preprocessor": "^0.1",
+    "karma-coverage": "^0.1.0",
+    "grunt-groc": "^0.4",
+    "grunt-shell": "^0.7",
+    "grunt-version": "~0.3.0"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:EnoF/EnoFJS.git"
+  }
 }

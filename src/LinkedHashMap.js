@@ -1,9 +1,10 @@
-//      EnoFJS v1.1.3
-
-//      Copyright (c) 2014.
+// EnoFJS
+// Version: 1.2.1
 //
-//      Author Andy Tang
-//      Fork me on Github: https://github.com/EnoF/EnoFJS
+// Copyright (c) 2014.
+//
+// Author Andy Tang
+// Fork me on Github: https://github.com/EnoF/EnoFJS
 (function LinkedHashMapScope(window, clazz, undefined) {
     'use strict';
 

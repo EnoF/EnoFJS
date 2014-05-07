@@ -1,8 +1,10 @@
-/*
- * Copyright (c) 2014.
- *
- * @Author Andy Tang
- */
+// EnoFJS
+// Version: 1.2.1
+//
+// Copyright (c) 2014.
+//
+// Author Andy Tang
+// Fork me on Github: https://github.com/EnoF/EnoFJS
 'use strict';
 
 module.exports = function (grunt) {
@@ -56,6 +58,21 @@ module.exports = function (grunt) {
                         'src/*.js'
                     ]
                 }
+            }
+        },
+        version: {
+            options: {
+                prefix: 'Version: |\"version\": \"'
+            },
+            defaults: {
+                src: [
+                    '*.js',
+                    'bower.json',
+                    'src/{,*/}*.js',
+                    'test/{,*/}*.js',
+                    '!**/lib/**',
+                    '!**/bower_components/**'
+                ]
             }
         }
     });
