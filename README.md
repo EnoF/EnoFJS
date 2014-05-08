@@ -2,6 +2,7 @@ EnoFJS
 ======
 [![Build Status](https://drone.io/github.com/EnoF/EnoFJS/status.png)](https://drone.io/github.com/EnoF/EnoFJS/latest)
 [![Code Climate](https://codeclimate.com/github/EnoF/EnoFJS.png)](https://codeclimate.com/github/EnoF/EnoFJS)
+[![Coverage Status](https://coveralls.io/repos/EnoF/EnoFJS/badge.png?branch=master)](https://coveralls.io/r/EnoF/EnoFJS?branch=master)
 Inheritance
 -----------
 Javascript supports private and public out of the box. However
@@ -85,3 +86,18 @@ Configuration will be matched to the variable names!
             result: 202
         }
     ]);
+
+ArrayConverters
+---------------
+In modern browsers `TypedArrays` are introduced. The literal array `[]` or `new Array()`
+do not support the `ArrayBuffer` out of the box. To convert an literal array into an
+`Uint32Array` this extention on the `Array.prototype` is brought to live.
+
+Usage:
+
+    var array = [1,2,3,4];
+    var uInt32Array = array.toUint32Array();
+    console.log(uInt32Array[0]); // 67305985
+    uInt32Array[0] = uInt32Array[0] + 1;
+    array.readUint32ArrayIn(uInt32Array);
+    console.log(array); // [2, 2, 3, 4]

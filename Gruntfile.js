@@ -12,13 +12,11 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.initConfig({
-        watch: {
-            karma: {
-                files: [
-                    'src/{,*/}*.js',
-                    'test/spec/*Spec.js'
-                ],
-                tasks: ['karma:unitAuto:run']
+        coveralls: {
+            options: {
+                'coverage_dir': 'coverage',
+                force: true,
+                recursive: true
             }
         },
         groc: {
@@ -73,6 +71,15 @@ module.exports = function (grunt) {
                     '!**/lib/**',
                     '!**/bower_components/**'
                 ]
+            }
+        },
+        watch: {
+            karma: {
+                files: [
+                    'src/{,*/}*.js',
+                    'test/spec/*Spec.js'
+                ],
+                tasks: ['karma:unitAuto:run']
             }
         }
     });

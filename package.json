@@ -24,7 +24,8 @@
     "karma-coverage": "^0.1.0",
     "grunt-groc": "^0.4",
     "grunt-shell": "^0.7",
-    "grunt-version": "~0.3.0"
+    "grunt-version": "~0.3.0",
+    "grunt-karma-coveralls": "~2.5.0"
   },
   "engines": {
     "node": ">=0.10"

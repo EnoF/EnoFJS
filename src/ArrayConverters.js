@@ -22,7 +22,7 @@
         return uint32Array;
     }
 
-    // This should actually work with other Typed arrays aswell, but I haven't tested this yet!
+    // This should actually work with other Typed arrays as well, but I haven't tested this yet!
     function readUint32ArrayIn(uInt32) {
         // jshint validthis:true
         var self = this;
