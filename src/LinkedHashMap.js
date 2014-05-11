@@ -1,11 +1,11 @@
 // EnoFJS
-// Version: 1.2.1
+// Version: 1.2.3
 //
 // Copyright (c) 2014.
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function LinkedHashMapScope(window, clazz, undefined) {
+(function LinkedHashMapScope(exports, clazz, undefined) {
     'use strict';
 
     // A `Node` containing a `key` `value` pair.
@@ -39,7 +39,7 @@
     // The value is the Node.
 
     //      var list = new LinkedHashMap();
-    window.LinkedHashMap = clazz(function LinkedHashMap() {
+    var LinkedHashMap = clazz(function LinkedHashMap() {
         this.private = {
             duplicateKeyError: 'key already exists in LinkedHashMap',
             keyNotFoundError: 'key not found',
@@ -231,4 +231,10 @@
             this.private.hashMap = {};
         };
     });
-}(window, window.clazz));
+
+    if (exports.window !== undefined) {
+        exports.LinkedHashMap = LinkedHashMap;
+    } else {
+        exports.exports = LinkedHashMap;
+    }
+}(this.window || module, this.window ? this.window.clazz : require('./ClassFactory.js')));

@@ -1,11 +1,11 @@
 // EnoFJS
-// Version: 1.2.1
+// Version: 1.2.3
 //
 // Copyright (c) 2014.
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function ClassScope(window, undefined) {
+(function ClassScope(exports, undefined) {
     'use strict';
 
     // A map containing all classes registered to the ClassFactory.
@@ -20,11 +20,11 @@
     //      clazz(function Animal(){
     //          ...
     //      });
-    window.clazz = function clazz(NewClass) {
+    function clazz(NewClass) {
         var className = NewClass.extractFunctionName();
 
         return parseToPrototypedClass(className, NewClass);
-    };
+    }
 
     // Parse a normal class into a Prototyped Class.
     function parseToPrototypedClass(className, NewClass) {
@@ -304,4 +304,11 @@
     String.prototype.capitaliseFirstLetter = function capitaliseFirstLetter() {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
-}(window));
+
+    // Publish the module to the available source.
+    if (exports.window !== undefined) {
+        exports.clazz = clazz;
+    } else {
+        exports.exports = clazz;
+    }
+}(this.window || module));

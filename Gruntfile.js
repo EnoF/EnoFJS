@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 1.2.1
+// Version: 1.2.3
 //
 // Copyright (c) 2014.
 //
@@ -46,6 +46,15 @@ module.exports = function (grunt) {
                 background: true
             }
         },
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    require: 'should'
+                },
+                src: ['test/nodifyTest.js']
+            }
+        },
         uglify: {
             dist: {
                 files: {
@@ -87,6 +96,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'jshint',
         'karma:unit',
+        'mochaTest:test',
         'uglify'
     ]);
 

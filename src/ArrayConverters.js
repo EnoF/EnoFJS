@@ -1,11 +1,11 @@
 // EnoFJS 
-// Version: 1.2.1
+// Version: 1.2.3
 //
 // Copyright (c) 2014. 
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function ArrayConvertersScope(Array, Uint8Array, Uint32Array) {
+(function ArrayConvertersScope() {
     'use strict';
 
     // The Array buffer will expect the combined 4 bytes in reversed order.
@@ -35,4 +35,4 @@
     Array.prototype.toUint32Array = toUint32Array;
     Array.prototype.readUint32ArrayIn = readUint32ArrayIn;
 
-}(window.Array, window.Uint8Array, window.Uint32Array));
+}());
