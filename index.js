@@ -15,8 +15,6 @@
     // Expose modules.
     module.exports = {
         clazz: require('./src/ClassFactory.js'),
-        LinkedHashMap: require('./src/LinkedHashMap.js'),
+        LinkedHashMap: require('./src/LinkedHashMap.js')
     };
-
-    console.log(module.exports.Serializable)
 }());

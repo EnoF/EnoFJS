@@ -101,4 +101,52 @@
             expect(serialized.foz).not.toBeDefined();
         });
     });
+
+    describe('Deserialize specs', function DeserializeSpec() {
+
+        var deserialized;
+
+        beforeEach(function prepareDeserialization() {
+            var serialized = {
+                foo: 123,
+                bar: 'bar',
+                boz: [
+                    {
+                        hello: 'world'
+                    }
+                ]
+            };
+
+            var TestDeserializeClass = clazz(function TestDeserializeClass() {
+
+                this.extend = 'Serializable';
+
+                this.private = {
+                    foo: {
+                        getSet: null
+                    }
+                };
+
+                this.protected = {
+                    bar: {
+                        getSet: null
+                    }
+                };
+
+                this.constructor = function constructor(serialized) {
+                    this.super(serialized);
+                };
+            });
+
+            deserialized = new TestDeserializeClass(serialized);
+        });
+
+        it('should deserialize numbers', function deserializeNumbers() {
+            expect(deserialized.getFoo()).toEqual(123);
+        });
+
+        it('should deserialize strings', function deserializeStrings() {
+            expect(deserialized.getBar()).toEqual('bar');
+        });
+    });
 }());

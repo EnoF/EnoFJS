@@ -11,6 +11,15 @@
     var Serializable = clazz(function Serializable() {
 
         this.private = {
+            deserialize: function deserialize(serialized) {
+                for (var i in serialized) {
+                    if (i in this.protected) {
+                        this.protected[i] = serialized[i];
+                    } else if (i in this.private) {
+                        this.private[i] = serialized[i];
+                    }
+                }
+            },
             isNumberOrString: function isNumberOrString(property) {
                 var type = typeof property;
                 return type === 'number' || type === 'string';
@@ -53,8 +62,8 @@
             }
         };
 
-        this.constructor = function constructor() {
-
+        this.constructor = function constructor(serialized) {
+            this.private.deserialize(serialized);
         };
 
     });
