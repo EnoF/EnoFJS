@@ -22,7 +22,7 @@
         "karma-phantomjs-launcher": "^0.1",
         "karma": "^0.10",
         "karma-ng-html2js-preprocessor": "^0.1",
-        "karma-coverage": "^0.1.0",
+        "karma-coverage": "^0",
         "grunt-groc": "^0.4",
         "grunt-shell": "^0.7",
         "grunt-version": "~0.3.0",

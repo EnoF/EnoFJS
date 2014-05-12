@@ -96,8 +96,10 @@
         var PrototypedClass = {
             extend: instance.extend,
             constructor: instance.constructor,
-            super: parent !== undefined ? parent.constructor : function () {
-            },
+            super: parent !== undefined ? parent.constructor :
+                /* istanbul ignore next: only for safety reasons */
+                function noopConstructor() {
+                },
             Private: Private,
             Protected: Protected,
             Public: Public
@@ -159,7 +161,7 @@
                     members[member] = autoProperty.getSet;
                 } else if (isser) {
                     members[member] = autoProperty.isSet;
-                } else if (autoProperty.hasOwnProperty('set')) {
+                } else {
                     members[member] = autoProperty.set;
                 }
 
@@ -257,6 +259,7 @@
         instance.public = instance.public || {};
         instance.super = instance.super || {};
         instance.constructor = instance.constructor ||
+            /* istanbul ignore next: this is only for safety reasons */
             function constructor() {
             };
         return instance;
@@ -306,9 +309,10 @@
     };
 
     // Publish the module to the available source.
+    /* istanbul ignore else */
     if (exports.window !== undefined) {
         exports.clazz = clazz;
     } else {
         exports.exports = clazz;
     }
-}(this.window || module));
+}(this.window || /* istanbul ignore next: only node should use module */ module));

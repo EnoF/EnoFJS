@@ -55,6 +55,7 @@
         var list = new LinkedHashMap();
         var index;
         for (var i in testArguments) {
+            /* istanbul ignore else: sanity check */
             if (testArguments.hasOwnProperty(i)) {
                 index = testAsString.indexOf(i + ',');
                 if (index === -1) {

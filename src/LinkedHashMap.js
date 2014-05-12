@@ -5,7 +5,7 @@
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function LinkedHashMapScope(exports, clazz, undefined) {
+(function LinkedHashMapScope(window, clazz, undefined) {
     'use strict';
 
     // A `Node` containing a `key` `value` pair.
@@ -232,9 +232,12 @@
         };
     });
 
-    if (exports.window !== undefined) {
-        exports.LinkedHashMap = LinkedHashMap;
+    /* istanbul ignore else */
+    if (window !== undefined) {
+        window.LinkedHashMap = LinkedHashMap;
     } else {
-        exports.exports = LinkedHashMap;
+        module.exports = LinkedHashMap;
     }
-}(this.window || module, this.window ? this.window.clazz : require('./ClassFactory.js')));
+}(this.window,
+    this.window ? this.window.clazz :
+        /* istanbul ignore next */ require('./ClassFactory.js')));
