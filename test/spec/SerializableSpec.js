@@ -105,6 +105,7 @@
     describe('Deserialize specs', function DeserializeSpec() {
 
         var deserialized;
+        var Hello;
 
         beforeEach(function prepareDeserialization() {
             var serialized = {
@@ -124,11 +125,30 @@
                 this.private = {
                     foo: {
                         getSet: null
+                    },
+                    boz: {
+                        getSet: null
                     }
                 };
 
                 this.protected = {
                     bar: {
+                        getSet: null
+                    }
+                };
+
+                this.constructor = function constructor(serialized) {
+                    this.super(serialized);
+                    this.private.boz = this.protected.deserializeArray(serialized.boz, Hello);
+                };
+            });
+
+            Hello = clazz(function Hello() {
+
+                this.extend = 'Serializable';
+
+                this.private = {
+                    hello: {
                         getSet: null
                     }
                 };
@@ -147,6 +167,12 @@
 
         it('should deserialize strings', function deserializeStrings() {
             expect(deserialized.getBar()).toEqual('bar');
+        });
+
+        it('should deserialize sub objects', function deserializeSubObjects() {
+            var boz = deserialized.getBoz();
+            expect(boz[0] instanceof Hello);
+            expect(boz[0].getHello()).toEqual('world');
         });
     });
 }());

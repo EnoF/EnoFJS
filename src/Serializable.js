@@ -52,6 +52,17 @@
             }
         };
 
+        this.protected = {
+            deserializeArray: function deserializeArray(serializedArray, Clazz) {
+                var deserializedArray = [];
+                for (var i = 0; i < serializedArray.length; i++) {
+                    var serializedObject = serializedArray[i];
+                    deserializedArray[i] = new Clazz(serializedObject);
+                }
+                return deserializedArray;
+            }
+        };
+
         this.public = {
             serialize: function serialize() {
                 var serialized = {};
