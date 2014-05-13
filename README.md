@@ -64,6 +64,21 @@ is used. This way you have best of both worlds!
     expect(list.get('an non integer key').getNext().
                         getValue()).toEqual('three');
 
+Serializable
+------------
+When sending information over the line in `json` format, the `Serializable` clazz can help. This Class will help you
+in serializing your classes into a `json` format.
+
+The class also helps you deserialize a serialized object in `json` format.
+
+    var SerializableObject = clazz(function SerializableObject(){
+        this.extend = 'Serializable';
+
+        this.constructor = function constructor(serialized){
+            this.super(serialized);
+        };
+    });
+
 WhereIt
 -------
 The `whereIt` is an extention for the Jasmine test framework. Often you have a test cases

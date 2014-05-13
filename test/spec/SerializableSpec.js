@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 1.1.3
+// Version: 1.3.0
 //
 // Copyright (c) 2014. 
 //

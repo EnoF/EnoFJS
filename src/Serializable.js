@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 1.1.3
+// Version: 1.3.0
 //
 // Copyright (c) 2014. 
 //
@@ -11,6 +11,8 @@
     var Serializable = clazz(function Serializable() {
 
         this.private = {
+            // Deserialization for the private and protected variables.
+            // `public` properties are not supported, use `getters` and `setters` instead!
             deserialize: function deserialize(serialized) {
                 for (var i in serialized) {
                     if (i in this.protected) {
@@ -20,28 +22,15 @@
                     }
                 }
             },
-            isNumberOrString: function isNumberOrString(property) {
-                var type = typeof property;
-                return type === 'number' || type === 'string';
-            },
-            serializeArray: function serializeArray(array, target) {
-                for (var index = 0; index < array.length; index = index + 1) {
-                    var object = array[index];
-                    if (this.private.isNumberOrString(object)) {
-                        target.push(object);
-                    } else {
-                        if (object instanceof window.Serializable) {
-                            target.push(object.serialize());
-                        }
-                    }
-                }
-            },
-            serialize: function serialize(object, target) {
-                for (var i in object) {
-                    var property = object[i];
+            // Serialize a specific scope onto an new target object.
+            serialize: function serialize(scope, target) {
+                for (var i in scope) {
+                    var property = scope[i];
                     if (this.private.isNumberOrString(property)) {
-                        target[i] = object[i];
+                        // Serialize the property directly if it is a `String` or `Number`.
+                        target[i] = scope[i];
                     } else if (property instanceof Array) {
+                        // When it is an Array, serialize it with the serializeArray helper.
                         target[i] = [];
                         this.private.serializeArray(property, target[i]);
                         if (target[i].length === 0) {
@@ -49,10 +38,31 @@
                         }
                     }
                 }
+            },
+            // Return if the provided property is either a number or string.
+            isNumberOrString: function isNumberOrString(property) {
+                var type = typeof property;
+                return type === 'number' || type === 'string';
+            },
+            // Serializing the array into a target array.
+            serializeArray: function serializeArray(array, target) {
+                for (var index = 0; index < array.length; index = index + 1) {
+                    var object = array[index];
+                    if (this.private.isNumberOrString(object)) {
+                        // When the value is a `String` or `Number` proceed to serialize.
+                        target.push(object);
+                    } else if (object instanceof window.Serializable) {
+                        // When the value is Serializable, serialize the object first.
+                        target.push(object.serialize());
+                    }
+                }
             }
         };
 
         this.protected = {
+            // Deserializing arrays is only necessary when the value is Serialized.
+            // In that case use `deserializeArray` and provide the correct `Class` to
+            // deserialize the value to.
             deserializeArray: function deserializeArray(serializedArray, Clazz) {
                 var deserializedArray = [];
                 for (var i = 0; i < serializedArray.length; i++) {
@@ -66,6 +76,7 @@
         this.public = {
             serialize: function serialize() {
                 var serialized = {};
+                // Serialize all scopes into a new serialized object.
                 this.private.serialize(this.private, serialized);
                 this.private.serialize(this.protected, serialized);
                 this.private.serialize(this.public, serialized);
