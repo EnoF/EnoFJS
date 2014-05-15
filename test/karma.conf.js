@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014.
 //
@@ -16,6 +16,8 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'src/node-shim.js',
+            'src/clazz.js',
             'src/*.js',
             'test/spec/*.js'
         ],

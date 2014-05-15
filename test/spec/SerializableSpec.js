@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014. 
 //
@@ -7,6 +7,8 @@
 // Fork me on Github: https://github.com/EnoF/EnoFJS
 (function SerializableSpecScope() {
     'use strict';
+
+    var clazz = require('./clazz.js');
 
     describe('Serializable specs', function SerializableSpec() {
 

@@ -1,12 +1,14 @@
 // EnoFJS
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014.
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function LinkedHashMapScope(window, clazz, undefined) {
+(function LinkedHashMapScope(window, module, undefined) {
     'use strict';
+
+    var clazz = window.require('./clazz.js');
 
     // A `Node` containing a `key` `value` pair.
     // The `key` supports the types integer and string.
@@ -232,12 +234,5 @@
         };
     });
 
-    /* istanbul ignore else */
-    if (window !== undefined) {
-        window.LinkedHashMap = LinkedHashMap;
-    } else {
-        module.exports = LinkedHashMap;
-    }
-}(this.window,
-    this.window ? this.window.clazz :
-        /* istanbul ignore next */ require('./ClassFactory.js')));
+    window.exports(module, LinkedHashMap, './LinkedHashMap.js');
+}(require('./node-shim.js'), module));

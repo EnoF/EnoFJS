@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014.
 //
@@ -87,4 +87,4 @@
     }
 
 
-}(window.it, window.LinkedHashMap));
+}(window.it, require('./LinkedHashMap.js')));

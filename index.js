@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014. 
 //
@@ -14,7 +14,7 @@
 
     // Expose modules.
     module.exports = {
-        clazz: require('./src/ClassFactory.js'),
+        clazz: require('./src/clazz.js'),
         LinkedHashMap: require('./src/LinkedHashMap.js')
     };
 }());

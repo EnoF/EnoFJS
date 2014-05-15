@@ -1,14 +1,16 @@
 // EnoFJS 
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014. 
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function SerializableScope(window, clazz, undefined) {
+(function SerializableScope(window, module, undefined) {
     'use strict';
 
-    var Serializable = clazz(function Serializable() {
+    var clazz = require('./clazz.js');
+
+    function Serializable() {
 
         this.private = {
             // Deserialization for the private and protected variables.
@@ -51,7 +53,7 @@
                     if (this.private.isNumberOrString(object)) {
                         // When the value is a `String` or `Number` proceed to serialize.
                         target.push(object);
-                    } else if (object instanceof window.Serializable) {
+                    } else if (object instanceof InnerSerializableReference) {
                         // When the value is Serializable, serialize the object first.
                         target.push(object.serialize());
                     }
@@ -88,14 +90,10 @@
             this.private.deserialize(serialized);
         };
 
-    });
-
-    /* istanbul ignore else */
-    if (window !== undefined) {
-        window.Serializable = Serializable;
-    } else {
-        module.exports = Serializable;
     }
-}(this.window,
-    this.window ? this.window.clazz :
-        /* istanbul ignore next */ require('./ClassFactory.js')));
+
+    var SerializableClass = clazz(Serializable);
+    var InnerSerializableReference = SerializableClass;
+
+    window.exports(module, SerializableClass, './Serializable.js');
+}(require('./node-shim.js'), module));

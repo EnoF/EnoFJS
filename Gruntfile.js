@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Copyright (c) 2014.
 //
@@ -55,16 +55,45 @@ module.exports = function (grunt) {
                 src: ['test/nodifyTest.js']
             }
         },
+        pkg: grunt.file.readJSON('package.json'),
         uglify: {
             dist: {
-                files: {
-                    'dist/enofjs/min.class.js': [
-                        'src/ClassFactory.js'
-                    ],
-                    'dist/enofjs/min.enof.js': [
-                        'src/*.js'
-                    ]
-                }
+                options: {
+                    banner: '/* !!EnoFJS!! ' +
+                        'Version: <%= pkg.version %>, ' +
+                        'Author: <%= pkg.author %>, ' +
+                        'Fork me on Github: https://github.com/EnoF/EnoFJS */',
+                    mangle: {
+                        except: ['Serializable', 'LinkedHashMap']
+                    }
+                },
+                files: [
+                    {
+                        'dist/enofjs/min.enof.js': [
+                            'src/node-shim.js',
+                            'src/clazz.js',
+                            'src/*.js'
+                        ]
+                    },
+                    {
+                        'dist/enofjs/min.clazz.js': 'src/clazz.js'
+                    },
+                    {
+                        'dist/enofjs/min.node-shim.js': 'src/node-shim.js'
+                    },
+                    {
+                        'dist/enofjs/min.LinkedHashMap.js': 'src/LinkedHashMap.js'
+                    },
+                    {
+                        'dist/enofjs/min.Serializable.js': 'src/Serializable.js'
+                    },
+                    {
+                        'dist/enofjs/min.ArrayConverters.js': 'src/ArrayConverters.js'
+                    },
+                    {
+                        'dist/enofjs/min.whereIt.js': 'src/whereIt.js'
+                    }
+                ]
             }
         },
         version: {
