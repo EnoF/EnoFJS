@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 2.0.1
+// Version: 3.0.0
 //
 // Copyright (c) 2014.
 //
@@ -12,7 +12,7 @@
     // These classes are the original classes.
     var registeredClasses = {};
     // A map containing all generated classes.
-    // We will use this to look up and manage the dependency of the super scope.
+    // We will use this to look up and manage the dependency of the sup scope.
     var registeredEnoFJSClasses = {};
 
     // Wrap up a given class into an EnoFJS class.
@@ -96,7 +96,7 @@
         var PrototypedClass = {
             extend: instance.extend,
             constructor: instance.constructor,
-            super: parent !== undefined ? parent.constructor :
+            sup: parent !== undefined ? parent.constructor :
                 /* istanbul ignore next: only for safety reasons */
                 function noopConstructor() {
                 },
@@ -109,14 +109,14 @@
 
     function crossReferenceExtendedMembers(PrototypedClass, parentProto) {
         // Each scope can only access the parent's same scope.
-        PrototypedClass.Private.prototype.super = parentProto.private;
-        PrototypedClass.Protected.prototype.super = parentProto.protected;
-        PrototypedClass.Public.prototype.super = parentProto.public;
+        PrototypedClass.Private.prototype.sup = parentProto.private;
+        PrototypedClass.Protected.prototype.sup = parentProto.protected;
+        PrototypedClass.Public.prototype.sup = parentProto.public;
 
         // The references should be referenced to this instance, rather than the parent instance.
-        createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.super);
-        createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.super);
-        createCrossReference(PrototypedClass, PrototypedClass.Public.prototype.super);
+        createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.sup);
+        createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.sup);
+        createCrossReference(PrototypedClass, PrototypedClass.Public.prototype.sup);
     }
 
     // Generate is, get and setters. You can combine the `get` or `is` with the `set`.
@@ -218,7 +218,7 @@
                 protected: new PrototypedClass.Protected(),
                 public: new PrototypedClass.Public(),
                 constructor: PrototypedClass.constructor,
-                super: PrototypedClass.super
+                sup: PrototypedClass.sup
             };
 
             // Create references from scope to scope.
@@ -257,7 +257,7 @@
         instance.private = instance.private || {};
         instance.protected = instance.protected || {};
         instance.public = instance.public || {};
-        instance.super = instance.super || {};
+        instance.sup = instance.sup || {};
         instance.constructor = instance.constructor ||
             /* istanbul ignore next: this is only for safety reasons */
             function constructor() {

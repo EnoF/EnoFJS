@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 2.0.1
+// Version: 3.0.0
 //
 // Copyright (c) 2014. 
 //
@@ -140,7 +140,7 @@
                 };
 
                 this.constructor = function constructor(serialized) {
-                    this.super(serialized);
+                    this.sup(serialized);
                     this.private.boz = this.protected.deserializeArray(serialized.boz, Hello);
                 };
             });
@@ -156,7 +156,7 @@
                 };
 
                 this.constructor = function constructor(serialized) {
-                    this.super(serialized);
+                    this.sup(serialized);
                 };
             });
 

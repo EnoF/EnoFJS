@@ -2,7 +2,7 @@
     "name": "enofjs",
     "description": "Enhancing javascript",
     "author": "EnoF <andy@provictores.com> (http://enof.github.io/EnoFJS",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "dependencies": {},
     "devDependencies": {
         "grunt": "^0.4",
@@ -28,7 +28,8 @@
         "grunt-version": "~0.3.0",
         "grunt-karma-coveralls": "^2.5",
         "grunt-mocha-test": "^0",
-        "should": "^3"
+        "should": "^3",
+        "underscore": "~1.6.0"
     },
     "engines": {
         "node": ">=0.10"

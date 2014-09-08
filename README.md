@@ -59,9 +59,9 @@ is used. This way you have best of both worlds!
     list.add(0, 'one');
     list.add(1, 'two');
     list.add(2, 'three');
-    expect(list.get(1).getValue()).toEqual('two');
-    list.addAfter('an non integer key', 'four');
-    expect(list.get('an non integer key').getNext().
+    expect(list.getById(1).getValue()).toEqual('two');
+    list.addAfter(1, 'an non integer key', 'four');
+    expect(list.getById('an non integer key').getNext().
                         getValue()).toEqual('three');
 
 Serializable
