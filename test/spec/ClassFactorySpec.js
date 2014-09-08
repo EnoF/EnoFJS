@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 2.0.1
+// Version: 3.0.0
 //
 // Copyright (c) 2014.
 //
@@ -229,14 +229,14 @@
                         return this.private.age;
                     },
                     getAge: function getAge() {
-                        return this.public.getFullName() + ' is ' + this.super.getAge() +
+                        return this.public.getFullName() + ' is ' + this.sup.getAge() +
                             ' years old';
                     }
                 };
 
                 this.constructor = function (nickName, say) {
                     this.protected.nickName = nickName;
-                    this.super(say);
+                    this.sup(say);
                 };
             });
 
@@ -260,7 +260,7 @@
                 };
 
                 this.constructor = function constructor() {
-                    this.super.constructor('miaow');
+                    this.sup.constructor('miaow');
                     this.public.setName('puss in boots');
                 };
             });
@@ -278,10 +278,10 @@
                     miaw: function miaw() {
                         return this.public.getProtectedHi() + 'miaw';
                     }
-                }
+                };
 
                 this.constructor = function constructor() {
-                    this.super.constructor();
+                    this.sup.constructor();
                     this.public.setName('hello kitty');
                     this.protected.affect();
                 };
@@ -305,11 +305,11 @@
                 expect(dog.getName()).toEqual('Davidson!');
             });
 
-            it('should be able to call the super of the parent', function superOfFunction() {
+            it('should be able to call the sup of the parent', function supOfFunction() {
                 expect(dog.getAge()).toEqual('Harley(Davidson) is 0 years old');
             });
 
-            it('should be able to get the super constructor', function superConstructor() {
+            it('should be able to get the sup constructor', function supConstructor() {
                 expect(dog.sayHi()).toEqual('woof');
             });
 
