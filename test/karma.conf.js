@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 3.0.0
+// Version: 3.1.0
 //
 // Copyright (c) 2014.
 //
@@ -16,6 +16,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'bower_components/requirejs/require.js',
             'src/node-shim.js',
             'src/clazz.js',
             'src/*.js',
@@ -54,6 +55,7 @@ module.exports = function (config) {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
+            '!src/!node-shim.js': ['coverage'],
             'src/*.js': ['coverage']
         },
 

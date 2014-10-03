@@ -2,7 +2,7 @@
     "name": "enofjs",
     "description": "Enhancing javascript",
     "author": "EnoF <andy@provictores.com> (http://enof.github.io/EnoFJS",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "dependencies": {},
     "devDependencies": {
         "grunt": "^0.4",
