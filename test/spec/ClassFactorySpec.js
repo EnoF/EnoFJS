@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014.
 //
@@ -7,7 +7,7 @@
 // Fork me on Github: https://github.com/EnoF/EnoFJS
 (function (undefined) {
     'use strict';
-    var clazz = require('./clazz.js');
+    var clazz = window.clazz;
 
     describe('Class factory', function classFactorySpecs() {
 

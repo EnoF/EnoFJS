@@ -1,14 +1,12 @@
 // EnoFJS 
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014. 
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function SerializableScope(window, module, undefined) {
+(function SerializableScope(clazz) {
     'use strict';
-
-    var clazz = require('./clazz.js');
 
     function Serializable() {
 
@@ -95,5 +93,5 @@
     var SerializableClass = clazz(Serializable);
     var InnerSerializableReference = SerializableClass;
 
-    window.exports(module, SerializableClass, './Serializable.js');
-}(require('./node-shim.js'), module));
+    window.SerializableClass = SerializableClass;
+}(window.clazz));

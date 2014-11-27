@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014.
 //
@@ -8,7 +8,7 @@
 (function LinkedHashMapSpecScope(undefined) {
     'use strict';
 
-    var LinkedHashMap = require('./LinkedHashMap.js');
+    var LinkedHashMap = window.LinkedHashMap;
 
     describe('LinkedHashMap', function LinkedHashMapSpec() {
 

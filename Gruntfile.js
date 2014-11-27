@@ -1,5 +1,5 @@
 // EnoFJS
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014.
 //
@@ -46,15 +46,6 @@ module.exports = function (grunt) {
                 background: true
             }
         },
-        mochaTest: {
-            test: {
-                options: {
-                    reporter: 'spec',
-                    require: 'should'
-                },
-                src: ['test/nodifyTest.js']
-            }
-        },
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             dist: {
@@ -69,29 +60,25 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        'dist/enofjs/min.enof.js': [
-                            'src/node-shim.js',
+                        'dist/enofjs/enof.min.js': [
                             'src/clazz.js',
                             'src/*.js'
                         ]
                     },
                     {
-                        'dist/enofjs/min.clazz.js': 'src/clazz.js'
+                        'dist/enofjs/clazz.min.js': 'src/clazz.js'
                     },
                     {
-                        'dist/enofjs/min.node-shim.js': 'src/node-shim.js'
+                        'dist/enofjs/LinkedHashMap.min.js': 'src/LinkedHashMap.js'
                     },
                     {
-                        'dist/enofjs/min.LinkedHashMap.js': 'src/LinkedHashMap.js'
+                        'dist/enofjs/Serializable.min.js': 'src/Serializable.js'
                     },
                     {
-                        'dist/enofjs/min.Serializable.js': 'src/Serializable.js'
+                        'dist/enofjs/ArrayConverters.min.js': 'src/ArrayConverters.js'
                     },
                     {
-                        'dist/enofjs/min.ArrayConverters.js': 'src/ArrayConverters.js'
-                    },
-                    {
-                        'dist/enofjs/min.whereIt.js': 'src/whereIt.js'
+                        'dist/enofjs/whereIt.min.js': 'src/whereIt.js'
                     }
                 ]
             }
@@ -104,6 +91,7 @@ module.exports = function (grunt) {
                 src: [
                     '*.js',
                     'bower.json',
+                    'package.json',
                     'src/{,*/}*.js',
                     'test/{,*/}*.js',
                     '!**/lib/**',
@@ -125,7 +113,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'jshint',
         'karma:unit',
-        'mochaTest:test',
         'uglify'
     ]);
 

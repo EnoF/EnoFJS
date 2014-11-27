@@ -1,11 +1,11 @@
 // EnoFJS
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014.
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function ClassScope(window, module, undefined) {
+(function ClassScope(undefined) {
     'use strict';
 
     // A map containing all classes registered to the ClassFactory.
@@ -309,5 +309,5 @@
     };
 
     // Publish the module to the available source.
-    window.exports(module, clazz, './clazz.js');
-}(require('./node-shim.js'), module));
+    window.clazz = clazz;
+}());

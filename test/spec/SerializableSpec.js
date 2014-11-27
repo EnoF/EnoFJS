@@ -1,5 +1,5 @@
 // EnoFJS 
-// Version: 3.1.0
+// Version: 3.2.0
 //
 // Copyright (c) 2014. 
 //
@@ -8,7 +8,7 @@
 (function SerializableSpecScope() {
     'use strict';
 
-    var clazz = require('./clazz.js');
+    var clazz = window.clazz;
 
     describe('Serializable specs', function SerializableSpec() {
 
