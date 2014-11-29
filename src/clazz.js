@@ -309,5 +309,7 @@
     };
 
     // Publish the module to the available source.
-    window.clazz = clazz;
+    window.enofjs = {
+        clazz: clazz
+    };
 }());

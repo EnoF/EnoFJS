@@ -5,14 +5,14 @@
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function LinkedHashMapScope(clazz, undefined) {
+(function LinkedHashMapScope(enofjs, undefined) {
     'use strict';
 
     // A `Node` containing a `key` `value` pair.
     // The `key` supports the types integer and string.
     // The `value` however can be of any type.
     // The `Node` will also have, when applicable, a reference to it's neighbors in the list.
-    var Node = clazz(function Node() {
+    var Node = enofjs.clazz(function Node() {
         this.private = {
             key: {
                 getSet: null
@@ -39,7 +39,7 @@
     // The value is the Node.
 
     //      var list = new LinkedHashMap();
-    var LinkedHashMap = clazz(function LinkedHashMap() {
+    var LinkedHashMap = enofjs.clazz(function LinkedHashMap() {
         this.private = {
             duplicateKeyError: 'key already exists in LinkedHashMap',
             keyNotFoundError: 'key not found',
@@ -232,5 +232,5 @@
         };
     });
 
-    window.LinkedHashMap = LinkedHashMap;
-}(window.clazz));
+    enofjs.LinkedHashMap = LinkedHashMap;
+}(window.enofjs));

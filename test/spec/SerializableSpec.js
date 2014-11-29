@@ -8,7 +8,7 @@
 (function SerializableSpecScope() {
     'use strict';
 
-    var clazz = window.clazz;
+    var clazz = window.enofjs.clazz;
 
     describe('Serializable specs', function SerializableSpec() {
 

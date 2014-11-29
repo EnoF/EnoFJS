@@ -7,7 +7,7 @@
 // Fork me on Github: https://github.com/EnoF/EnoFJS
 (function (undefined) {
     'use strict';
-    var clazz = window.clazz;
+    var clazz = window.enofjs.clazz;
 
     describe('Class factory', function classFactorySpecs() {
 

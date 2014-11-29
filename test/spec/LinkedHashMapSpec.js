@@ -8,7 +8,7 @@
 (function LinkedHashMapSpecScope(undefined) {
     'use strict';
 
-    var LinkedHashMap = window.LinkedHashMap;
+    var LinkedHashMap = window.enofjs.LinkedHashMap;
 
     describe('LinkedHashMap', function LinkedHashMapSpec() {
 

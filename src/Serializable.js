@@ -5,7 +5,7 @@
 //
 // Author Andy Tang
 // Fork me on Github: https://github.com/EnoF/EnoFJS
-(function SerializableScope(clazz) {
+(function SerializableScope(enofjs) {
     'use strict';
 
     function Serializable() {
@@ -90,8 +90,8 @@
 
     }
 
-    var SerializableClass = clazz(Serializable);
+    var SerializableClass = enofjs.clazz(Serializable);
     var InnerSerializableReference = SerializableClass;
 
-    window.SerializableClass = SerializableClass;
-}(window.clazz));
+    enofjs.SerializableClass = SerializableClass;
+}(window.enofjs));
