@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"><head><title>src/ArrayConverters</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/ArrayConverters"><meta name="groc-project-path" content="src/ArrayConverters.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/ArrayConverters.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>EnoFJS
+Version: 4.0.0
+Copyright (c) 2014.
+Author Andy Tang
+Fork me on Github: <a href="https://github.com/EnoF/EnoFJS">https://github.com/EnoF/EnoFJS</a></p></div></div><div class="code"><div class="wrapper">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ArrayConvertersScope</span><span class="hljs-params">()</span> {</span>
+<span class="hljs-pi">  'use strict'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The Array buffer will expect the combined 4 bytes in reversed order.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toUint32Array</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>jshint validthis:true</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">var</span> uint32Array = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint32Array</span>(self.length / <span class="hljs-number">4</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; self.length; i = i + <span class="hljs-number">4</span>) {
+      uint32Array[i / <span class="hljs-number">4</span>] = (self[i + <span class="hljs-number">3</span>] &lt;&lt; <span class="hljs-number">24</span> |
+        self[i + <span class="hljs-number">2</span>] &lt;&lt; <span class="hljs-number">16</span> |
+        self[i + <span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-number">8</span> |
+        self[i]) &gt;&gt;&gt; <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">return</span> uint32Array;
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This should actually work with other Typed arrays as well, but I haven&#39;t tested this yet!</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readUint32ArrayIn</span><span class="hljs-params">(uInt32)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>jshint validthis:true</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">var</span> uInt8 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>(uInt32.buffer);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; uInt8.length; i = i + <span class="hljs-number">1</span>) {
+      self[i] = uInt8[i];
+    }
+  }
+
+  <span class="hljs-built_in">Array</span>.prototype.toUint32Array = toUint32Array;
+  <span class="hljs-built_in">Array</span>.prototype.readUint32ArrayIn = readUint32ArrayIn;
+
+}());</div></div></div></div></body></html>

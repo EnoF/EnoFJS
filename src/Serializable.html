@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Serializable</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Serializable"><meta name="groc-project-path" content="src/Serializable.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Serializable.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>EnoFJS
+Version: 4.0.0
+Copyright (c) 2014.
+Author Andy Tang
+Fork me on Github: <a href="https://github.com/EnoF/EnoFJS">https://github.com/EnoF/EnoFJS</a></p></div></div><div class="code"><div class="wrapper">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">SerializableScope</span><span class="hljs-params">(enofjs)</span> {</span>
+<span class="hljs-pi">  'use strict'</span>;
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Serializable</span><span class="hljs-params">()</span> {</span>
+
+    <span class="hljs-keyword">this</span>.private = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Deserialization for the private and protected variables.
+<code>public</code> properties are not supported, use <code>getters</code> and <code>setters</code> instead!</p></div></div><div class="code"><div class="wrapper">      deserialize: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deserialize</span><span class="hljs-params">(serialized)</span> {</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> serialized) {
+          <span class="hljs-keyword">if</span> (i <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.protected) {
+            <span class="hljs-keyword">this</span>.protected[i] = serialized[i];
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (i <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.private) {
+            <span class="hljs-keyword">this</span>.private[i] = serialized[i];
+          }
+        }
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Serialize a specific scope onto an new target object.</p></div></div><div class="code"><div class="wrapper">      serialize: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serialize</span><span class="hljs-params">(scope, target)</span> {</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> scope) {
+          <span class="hljs-keyword">var</span> property = scope[i];
+          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.isNumberOrString(property)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Serialize the property directly if it is a <code>String</code> or <code>Number</code>.</p></div></div><div class="code"><div class="wrapper">            target[i] = scope[i];
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (property <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When it is an Array, serialize it with the serializeArray helper.</p></div></div><div class="code"><div class="wrapper">            target[i] = [];
+            <span class="hljs-keyword">this</span>.private.serializeArray(property, target[i]);
+            <span class="hljs-keyword">if</span> (target[i].length === <span class="hljs-number">0</span>) {
+              <span class="hljs-keyword">delete</span> target[i];
+            }
+          }
+        }
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Return if the provided property is either a number or string.</p></div></div><div class="code"><div class="wrapper">      isNumberOrString: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isNumberOrString</span><span class="hljs-params">(property)</span> {</span>
+        <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">typeof</span> property;
+        <span class="hljs-keyword">return</span> type === <span class="hljs-string">'number'</span> || type === <span class="hljs-string">'string'</span>;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Serializing the array into a target array.</p></div></div><div class="code"><div class="wrapper">      serializeArray: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serializeArray</span><span class="hljs-params">(array, target)</span> {</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; array.length; index = index + <span class="hljs-number">1</span>) {
+          <span class="hljs-keyword">var</span> object = array[index];
+          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.isNumberOrString(object)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When the value is a <code>String</code> or <code>Number</code> proceed to serialize.</p></div></div><div class="code"><div class="wrapper">            target.push(object);
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (object <span class="hljs-keyword">instanceof</span> InnerSerializableReference) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When the value is Serializable, serialize the object first.</p></div></div><div class="code"><div class="wrapper">            target.push(object.serialize());
+          }
+        }
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.protected = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Deserializing arrays is only necessary when the value is Serialized.
+In that case use <code>deserializeArray</code> and provide the correct <code>Class</code> to
+deserialize the value to.</p></div></div><div class="code"><div class="wrapper">      deserializeArray: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deserializeArray</span><span class="hljs-params">(serializedArray, Clazz)</span> {</span>
+        <span class="hljs-keyword">var</span> deserializedArray = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; serializedArray.length; i++) {
+          <span class="hljs-keyword">var</span> serializedObject = serializedArray[i];
+          deserializedArray[i] = <span class="hljs-keyword">new</span> Clazz(serializedObject);
+        }
+        <span class="hljs-keyword">return</span> deserializedArray;
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.public = {
+      serialize: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serialize</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">var</span> serialized = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Serialize all scopes into a new serialized object.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">this</span>.private.serialize(<span class="hljs-keyword">this</span>.private, serialized);
+        <span class="hljs-keyword">this</span>.private.serialize(<span class="hljs-keyword">this</span>.protected, serialized);
+        <span class="hljs-keyword">this</span>.private.serialize(<span class="hljs-keyword">this</span>.public, serialized);
+        <span class="hljs-keyword">return</span> serialized;
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.constructor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">constructor</span><span class="hljs-params">(serialized)</span> {</span>
+      <span class="hljs-keyword">this</span>.private.deserialize(serialized);
+    };
+
+  }
+
+  <span class="hljs-keyword">var</span> SerializableClass = enofjs.clazz(Serializable);
+  <span class="hljs-keyword">var</span> InnerSerializableReference = SerializableClass;
+
+  enofjs.SerializableClass = SerializableClass;
+}(window.enofjs));</div></div></div></div></body></html>

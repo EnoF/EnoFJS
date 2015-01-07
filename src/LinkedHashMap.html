@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><title>src/LinkedHashMap</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/LinkedHashMap"><meta name="groc-project-path" content="src/LinkedHashMap.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/LinkedHashMap.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>EnoFJS
+Version: 4.0.0
+Copyright (c) 2014.
+Author Andy Tang
+Fork me on Github: <a href="https://github.com/EnoF/EnoFJS">https://github.com/EnoF/EnoFJS</a></p></div></div><div class="code"><div class="wrapper">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">LinkedHashMapScope</span><span class="hljs-params">(enofjs, undefined)</span> {</span>
+<span class="hljs-pi">  'use strict'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A <code>Node</code> containing a <code>key</code> <code>value</code> pair.
+The <code>key</code> supports the types integer and string.
+The <code>value</code> however can be of any type.
+The <code>Node</code> will also have, when applicable, a reference to it&#39;s neighbors in the list.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> Node = enofjs.clazz(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Node</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.private = {
+      key: {
+        getSet: <span class="hljs-literal">null</span>
+      },
+      value: {
+        getSet: <span class="hljs-literal">null</span>
+      },
+      previous: {
+        getSet: <span class="hljs-literal">null</span>
+      },
+      next: {
+        getSet: <span class="hljs-literal">null</span>
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.constructor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">constructor</span><span class="hljs-params">(key, value)</span> {</span>
+      <span class="hljs-keyword">this</span>.private.key = key;
+      <span class="hljs-keyword">this</span>.private.value = value;
+    };
+  });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>LinkedHashMap contains an HashMap.
+The key is identical to the key of the Node it will store.
+The value is the Node.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code> var list = new LinkedHashMap();</code></pre></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> LinkedHashMap = enofjs.clazz(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">LinkedHashMap</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.private = {
+      duplicateKeyError: <span class="hljs-string">'key already exists in LinkedHashMap'</span>,
+      keyNotFoundError: <span class="hljs-string">'key not found'</span>,
+      size: {
+        get: <span class="hljs-number">0</span>
+      },
+      first: {
+        get: <span class="hljs-literal">null</span>
+      },
+      last: {
+        get: <span class="hljs-literal">null</span>
+      },
+      hashMap: {},</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add a new entry to the HashMap.</p></div></div><div class="code"><div class="wrapper">      add: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(key, value)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Throw an error when the key already exists inside of the HashMap.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.hashMap.hasOwnProperty(key)) {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-keyword">this</span>.private.duplicateKeyError);
+        }
+        <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node(key, value);
+        <span class="hljs-keyword">this</span>.private.hashMap[key] = newNode;
+        <span class="hljs-keyword">this</span>.private.size++;
+        <span class="hljs-keyword">return</span> newNode;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Remove an entry from the hashMap and removes all
+references to the node to be removed.</p></div></div><div class="code"><div class="wrapper">      remove: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span><span class="hljs-params">(node)</span> {</span>
+        <span class="hljs-keyword">var</span> key = node.getKey();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the node is also the first entry of the LinkedHashMap,
+then we should promote the next node as the new first entry!</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (node === <span class="hljs-keyword">this</span>.private.first) {
+          <span class="hljs-keyword">this</span>.private.first = <span class="hljs-keyword">this</span>.private.first.getNext();
+          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.first <span class="hljs-keyword">instanceof</span> Node) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Also make sure to remove the reference to the node
+that is going to be deleted.
+We don&#39;t want any ghosts around here!</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">this</span>.private.first.setPrevious(<span class="hljs-literal">null</span>);
+          }
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the node is the last entry of the LinkedHashMap,
+then we should promote the previous node as the new last entry!</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (node === <span class="hljs-keyword">this</span>.private.last) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Since we already checked that this node is not the first node, we can
+safely assume that there is an previous node.</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">this</span>.private.last = <span class="hljs-keyword">this</span>.private.last.getPrevious();
+          <span class="hljs-keyword">this</span>.private.last.setNext(<span class="hljs-literal">null</span>);
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When the node is in the middle, we have to remove the references
+from the neighbors and let them point to each other instead.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">else</span> {
+          node.getPrevious().setNext(node.getNext());
+          node.getNext().setPrevious(node.getPrevious());
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now lets remove :)</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">this</span>.private.size--;
+        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.private.hashMap[key];
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.protected = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add a new node after the given node</p></div></div><div class="code"><div class="wrapper">      addAfter: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addAfter</span><span class="hljs-params">(node, newNode)</span> {</span>
+        <span class="hljs-keyword">var</span> nextNode = node.getNext();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the given node isn&#39;t the <code>last</code> node, make sure to update the references.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (nextNode !== <span class="hljs-literal">null</span>) {
+          nextNode.setPrevious(newNode);
+          newNode.setNext(nextNode);
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Otherwise we have to update the <code>last</code> reference.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">this</span>.private.last = newNode;
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Point the two nodes to each other, as they have become neighbors :)</p></div></div><div class="code"><div class="wrapper">        node.setNext(newNode);
+        newNode.setPrevious(node);
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Adds a new node before the given node.</p></div></div><div class="code"><div class="wrapper">      addBefore: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addBefore</span><span class="hljs-params">(node, newNode)</span> {</span>
+        <span class="hljs-keyword">var</span> previousNode = node.getPrevious();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the <code>node</code> reference isn&#39;t the first node,
+make sure to exchange contacts.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (previousNode !== <span class="hljs-literal">null</span>) {
+          previousNode.setNext(newNode);
+          newNode.setPrevious(previousNode);
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Otherwise we have to let the <code>LinkedHashMap</code> know who is first!</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">this</span>.private.first = newNode;
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The new node should say hello to the node he is living in front of now.</p></div></div><div class="code"><div class="wrapper">        node.setPrevious(newNode);
+        newNode.setNext(node);
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.public = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add a new key value pair to the LinkedHashMap.</p></div></div><div class="code"><div class="wrapper">      add: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span><span class="hljs-params">(key, value)</span> {</span>
+        <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">this</span>.private.add(key, value);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.size === <span class="hljs-number">1</span>) {
+          <span class="hljs-keyword">this</span>.private.first = newNode;
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">this</span>.protected.addAfter(<span class="hljs-keyword">this</span>.private.last, newNode);
+        }
+        <span class="hljs-keyword">this</span>.private.last = newNode;
+
+        <span class="hljs-keyword">return</span> newNode;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Adds a new node after a given node key.
+First we look up the <code>key</code>, then we introduce the new <code>node</code> after
+the looked up <code>node</code>.</p></div></div><div class="code"><div class="wrapper">      addAfter: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addAfter</span><span class="hljs-params">(nodeKeyToInsertAfter, newKey, newValue)</span> {</span>
+        <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">this</span>.private.add(newKey, newValue);
+        <span class="hljs-keyword">var</span> nodeToInsertAfter = <span class="hljs-keyword">this</span>.public.getById(nodeKeyToInsertAfter);
+        <span class="hljs-keyword">this</span>.protected.addAfter(nodeToInsertAfter, newNode);
+        <span class="hljs-keyword">return</span> newNode;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Adds a new node before a given node key.
+Again we look up the <code>node</code> bound to the given <code>key</code> and then we introduce
+the new <code>node</code> before this <code>node</code>.</p></div></div><div class="code"><div class="wrapper">      addBefore: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addBefore</span><span class="hljs-params">(nodeKeyToInsertBefore, newKey, newValue)</span> {</span>
+        <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">this</span>.private.add(newKey, newValue);
+        <span class="hljs-keyword">var</span> nodeToInsertBefore = <span class="hljs-keyword">this</span>.public.getById(nodeKeyToInsertBefore);
+        <span class="hljs-keyword">this</span>.protected.addBefore(nodeToInsertBefore, newNode);
+        <span class="hljs-keyword">return</span> newNode;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Adds a new node at the first position.
+We have a new first comer!</p></div></div><div class="code"><div class="wrapper">      addFirst: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addFirst</span><span class="hljs-params">(newKey, newValue)</span> {</span>
+        <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">this</span>.private.add(newKey, newValue);
+        <span class="hljs-keyword">var</span> first = <span class="hljs-keyword">this</span>.private.first;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If there was an other node on the first place,
+let him know who is now number one!</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (first !== <span class="hljs-literal">null</span>) {
+          <span class="hljs-keyword">this</span>.protected.addBefore(first, newNode);
+        }
+        <span class="hljs-keyword">return</span> newNode;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Adds a new node at the last position.
+Similar to the add function, just to prevent the <code>addFirst</code> function
+from feeling lonely.</p></div></div><div class="code"><div class="wrapper">      addLast: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addLast</span><span class="hljs-params">(newKey, newValue)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.public.add(newKey, newValue);
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Find a node reference by his key.</p></div></div><div class="code"><div class="wrapper">      getById: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getById</span><span class="hljs-params">(key)</span> {</span>
+        <span class="hljs-keyword">var</span> node = <span class="hljs-keyword">this</span>.private.hashMap[key];
+        <span class="hljs-keyword">if</span> (node === <span class="hljs-literal">undefined</span>) {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-keyword">this</span>.private.keyNotFoundError);
+        }
+        <span class="hljs-keyword">return</span> node;
+      },
+      isEmpty: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isEmpty</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.private.size === <span class="hljs-number">0</span>;
+      },</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Find the node by it&#39;s key and kick it out of the list!</p></div></div><div class="code"><div class="wrapper">      remove: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span><span class="hljs-params">(key)</span> {</span>
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.private.hashMap.hasOwnProperty(key)) {
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.private.remove(<span class="hljs-keyword">this</span>.public.getById(key));
+      },
+      removeFirst: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeFirst</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.first === <span class="hljs-literal">null</span>) {
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.private.remove(<span class="hljs-keyword">this</span>.private.first);
+      },
+      removeLast: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeLast</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.private.last === <span class="hljs-literal">null</span>) {
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.private.remove(<span class="hljs-keyword">this</span>.private.last);
+      }
+    };
+
+    <span class="hljs-keyword">this</span>.constructor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">constructor</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">this</span>.private.hashMap = {};
+    };
+  });
+
+  enofjs.LinkedHashMap = LinkedHashMap;
+}(window.enofjs));</div></div></div></div></body></html>

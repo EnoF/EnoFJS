@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><title>src/clazz</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/clazz"><meta name="groc-project-path" content="src/clazz.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/clazz.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>EnoFJS
+Version: 4.0.0
+Copyright (c) 2014.
+Author Andy Tang
+Fork me on Github: <a href="https://github.com/EnoF/EnoFJS">https://github.com/EnoF/EnoFJS</a></p></div></div><div class="code"><div class="wrapper">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ClassScope</span><span class="hljs-params">(undefined)</span> {</span>
+<span class="hljs-pi">  'use strict'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A map containing all classes registered to the ClassFactory.
+These classes are the original classes.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> registeredClasses = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A map containing all generated classes.
+We will use this to look up and manage the dependency of the sup scope.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> registeredEnoFJSClasses = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Wrap up a given class into an EnoFJS class.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code> clazz(function Animal(){
+     ...
+ });</code></pre></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clazz</span><span class="hljs-params">(className, NewClass)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'function'</span>) {
+      NewClass = className;
+      className = NewClass.extractFunctionName();
+    }
+    <span class="hljs-keyword">return</span> parseToPrototypedClass(className, NewClass);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Parse a normal class into a Prototyped Class.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseToPrototypedClass</span><span class="hljs-params">(className, NewClass)</span> {</span>
+
+    <span class="hljs-keyword">var</span> instance = normalizeInstance(<span class="hljs-keyword">new</span> NewClass());
+    <span class="hljs-keyword">var</span> parent;
+    <span class="hljs-keyword">var</span> parentProto;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate Getters and Setters into the prototype.</p></div></div><div class="code"><div class="wrapper">    generateAutoIsGetSet(<span class="hljs-string">'private'</span>, instance.private, instance.public);
+    generateAutoIsGetSet(<span class="hljs-string">'protected'</span>, instance.protected, instance.public);
+
+    <span class="hljs-keyword">if</span> (instance.extend !== <span class="hljs-literal">undefined</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Merge the parent properties into this instance.</p></div></div><div class="code"><div class="wrapper">      parent = registeredClasses[instance.extend];
+      parentProto = extendParent(instance, parent);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a prototyped class based on the instance.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> PrototypedClass = createProtoClass(instance, parent);
+
+    <span class="hljs-keyword">if</span> (instance.extend !== <span class="hljs-literal">undefined</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create cross references for the extended members.</p></div></div><div class="code"><div class="wrapper">      crossReferenceExtendedMembers(PrototypedClass, parentProto);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Register the new PrototypedClass for future extension.</p></div></div><div class="code"><div class="wrapper">    registeredClasses[className] = PrototypedClass;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a new EnoFJSClass out of the PrototypedClass.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> createNewEnoFJSClass(className, PrototypedClass);
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">extendParent</span><span class="hljs-params">(instance, parent)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a new scope of the Private, Protected and Public,
+so that the instances won&#39;t clash.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> parentProto = {
+      private: <span class="hljs-keyword">new</span> parent.Private(),
+      protected: <span class="hljs-keyword">new</span> parent.Protected(),
+      public: <span class="hljs-keyword">new</span> parent.Public(),
+      constructor: parent.constructor
+    };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Merge the missing members of the parent into this class.</p></div></div><div class="code"><div class="wrapper">    mergeParentIntoChild(parentProto.private, instance.private);
+    mergeParentIntoChild(parentProto.protected, instance.protected);
+    mergeParentIntoChild(parentProto.public, instance.public);
+    <span class="hljs-keyword">return</span> parentProto;
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createProtoClass</span><span class="hljs-params">(instance, parent)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>For each scope, we need to create a new instance. Otherwise it will clash when the
+class is instantiated multiple times!</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Private</span><span class="hljs-params">()</span> {</span>}
+
+    Private.prototype = instance.private;
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Protected</span><span class="hljs-params">()</span> {</span>}
+
+    Protected.prototype = instance.protected;
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Public</span><span class="hljs-params">()</span> {</span>}
+
+    Public.prototype = instance.public;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The Prototyped Class Object.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> PrototypedClass = {
+      extend: instance.extend,
+      constructor: instance.constructor,
+      sup: parent !== <span class="hljs-literal">undefined</span> ? parent.constructor :</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>istanbul ignore next: only for safety reasons </p></div></div><div class="code"><div class="wrapper">        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">noopConstructor</span><span class="hljs-params">()</span> {</span>},
+      Private: Private,
+      Protected: Protected,
+      Public: Public
+    };
+    <span class="hljs-keyword">return</span> PrototypedClass;
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">crossReferenceExtendedMembers</span><span class="hljs-params">(PrototypedClass, parentProto)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Each scope can only access the parent&#39;s same scope.</p></div></div><div class="code"><div class="wrapper">    PrototypedClass.Private.prototype.sup = parentProto.private;
+    PrototypedClass.Protected.prototype.sup = parentProto.protected;
+    PrototypedClass.Public.prototype.sup = parentProto.public;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The references should be referenced to this instance, rather than the parent instance.</p></div></div><div class="code"><div class="wrapper">    createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.sup);
+    createCrossReference(PrototypedClass, PrototypedClass.Private.prototype.sup);
+    createCrossReference(PrototypedClass, PrototypedClass.Public.prototype.sup);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate is, get and setters. You can combine the <code>get</code> or <code>is</code> with the <code>set</code>.
+i.e. <code>getSet</code> or <code>isSet</code>.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>this.private = {
+    foo: {
+        get: &#39;value&#39;
+    },
+    bar: {
+        is: true
+    },
+    baz: {
+        getSet: &#39;value&#39;
+    }
+}</code></pre></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAutoIsGetSet</span><span class="hljs-params">(scopeName, members, publicScope)</span> {</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> member <span class="hljs-keyword">in</span> members) {
+      <span class="hljs-keyword">var</span> autoProperty = members[member];
+      <span class="hljs-keyword">var</span> getter = <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">var</span> isser = <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">var</span> capitalizedMemberName = member.capitaliseFirstLetter();
+      <span class="hljs-keyword">if</span> (!(autoProperty <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>)) {
+        <span class="hljs-keyword">continue</span>;
+      }
+      <span class="hljs-keyword">if</span> (hasGet(autoProperty)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set the value on the member, when it was a getSet, it will be set later on.</p></div></div><div class="code"><div class="wrapper">        members[member] = autoProperty.get;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate a getter.</p></div></div><div class="code"><div class="wrapper">        publicScope[<span class="hljs-string">'get'</span> + capitalizedMemberName] = generateAutoGet(scopeName, member);
+        getter = <span class="hljs-literal">true</span>;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hasIs(autoProperty)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set the value on the member, when it was a isSet, it will be set later on.</p></div></div><div class="code"><div class="wrapper">        members[member] = autoProperty.is;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate an isser.</p></div></div><div class="code"><div class="wrapper">        publicScope[<span class="hljs-string">'is'</span> + capitalizedMemberName] = generateAutoIs(scopeName, member);
+        isser = <span class="hljs-literal">true</span>;
+      }
+      <span class="hljs-keyword">if</span> (hasSet(autoProperty)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set the value on the member, depending if it is a set, getSet or isSet.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (getter) {
+          members[member] = autoProperty.getSet;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isser) {
+          members[member] = autoProperty.isSet;
+        } <span class="hljs-keyword">else</span> {
+          members[member] = autoProperty.set;
+        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate a setter.</p></div></div><div class="code"><div class="wrapper">        publicScope[<span class="hljs-string">'set'</span> + capitalizedMemberName] = generateAutoSet(scopeName, member);
+      }
+    }
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate a getter.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAutoGet</span><span class="hljs-params">(scopeName, member)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">autoGet</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[scopeName][member];
+    };
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate a isser.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAutoIs</span><span class="hljs-params">(scopeName, member)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">autoIs</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[scopeName][member];
+    };
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Generate a setter.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAutoSet</span><span class="hljs-params">(scopeName, member)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">autoSet</span><span class="hljs-params">(value)</span> {</span>
+      <span class="hljs-keyword">this</span>[scopeName][member] = value;
+    };
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Merge parent functions into child scope.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeParentIntoChild</span><span class="hljs-params">(parent, child)</span> {</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> member <span class="hljs-keyword">in</span> parent) {
+      <span class="hljs-keyword">if</span> (!child.hasOwnProperty(member)) {
+        child[member] = parent[member];
+      }
+    }
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Make public functions available in the <code>this</code> scope.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">publish</span><span class="hljs-params">(scope, publicMembers)</span> {</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> member <span class="hljs-keyword">in</span> publicMembers) {
+      scope[member] = publicMembers[member];
+    }
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a new EnoFJS class.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createNewEnoFJSClass</span><span class="hljs-params">(className, PrototypedClass)</span> {</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">EnoFJSClass</span><span class="hljs-params">()</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Instantiate the Prototyped Class.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">var</span> instance = {
+        private: <span class="hljs-keyword">new</span> PrototypedClass.Private(),
+        protected: <span class="hljs-keyword">new</span> PrototypedClass.Protected(),
+        public: <span class="hljs-keyword">new</span> PrototypedClass.Public(),
+        constructor: PrototypedClass.constructor,
+        sup: PrototypedClass.sup
+      };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create references from scope to scope.</p></div></div><div class="code"><div class="wrapper">      createCrossReference(instance, instance.private);
+      createCrossReference(instance, instance.protected);
+      createCrossReference(instance, instance.public);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Merge the public object into the this of the EnoFJS class.</p></div></div><div class="code"><div class="wrapper">      publish(<span class="hljs-keyword">this</span>, instance.public);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Trigger the constructor.</p></div></div><div class="code"><div class="wrapper">      instance.constructor.apply(instance, <span class="hljs-built_in">arguments</span>);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Make the class related to the parent.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>   Dog instanceof Animal === true;</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (PrototypedClass.extend !== <span class="hljs-literal">undefined</span>) {
+      EnoFJSClass.prototype = <span class="hljs-keyword">new</span> registeredEnoFJSClasses[PrototypedClass.extend]();
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Register the EnoFJS class so we can extend from it.</p></div></div><div class="code"><div class="wrapper">    registeredEnoFJSClasses[className] = EnoFJSClass;
+
+    <span class="hljs-keyword">return</span> EnoFJSClass;
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createCrossReference</span><span class="hljs-params">(referenceObject, instanceScope)</span> {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The reference object can be an instance or the PrototypeClass.</p></div></div><div class="code"><div class="wrapper">    instanceScope.private = referenceObject.private || referenceObject.Private.prototype;
+    instanceScope.protected = referenceObject.protected || referenceObject.Protected.prototype;
+    instanceScope.public = referenceObject.public || referenceObject.Public.prototype;
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Normalizing the instance in order to skip checks in the future.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">normalizeInstance</span><span class="hljs-params">(instance)</span> {</span>
+    instance.private = instance.private || {};
+    instance.protected = instance.protected || {};
+    instance.public = instance.public || {};
+    instance.sup = instance.sup || {};
+    instance.constructor = instance.constructor ||</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>istanbul ignore next: this is only for safety reasons </p></div></div><div class="code"><div class="wrapper">      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">constructor</span><span class="hljs-params">()</span> {</span>};
+    <span class="hljs-keyword">return</span> instance;
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extract the function name so we can use this to determine the name of the class
+we want to register. By extracting the name of the function, the registration of the class
+doesn&#39;t require a string to be passed on as a parameter.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-built_in">Function</span>.prototype.extractFunctionName = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">extractFunctionName</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> functionName = <span class="hljs-keyword">this</span>.toString();
+    functionName = functionName.substr(<span class="hljs-string">'function '</span>.length);
+    functionName = functionName.substr(<span class="hljs-number">0</span>, functionName.indexOf(<span class="hljs-string">'('</span>));
+    <span class="hljs-keyword">return</span> functionName;
+  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When an innerfunction will be passed down to an other function, it could be that the scope
+will be modified. Think of event handlers.
+Now you can pass the function with <code>this.private.getFoo.bind(this)</code>. This will preserve the scope.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-built_in">Function</span>.prototype.bindScope = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bindScope</span><span class="hljs-params">(scope)</span> {</span>
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">boundScope</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> self.apply(scope, <span class="hljs-built_in">arguments</span>);
+    };
+  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Getters, Setters and Issers</strong></p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>get || getSet</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasGet</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">return</span> value.hasOwnProperty(<span class="hljs-string">'get'</span>) || value.hasOwnProperty(<span class="hljs-string">'getSet'</span>);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>set || getSet || isSet</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasSet</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">return</span> value.hasOwnProperty(<span class="hljs-string">'set'</span>) || value.hasOwnProperty(<span class="hljs-string">'getSet'</span>) ||
+      value.hasOwnProperty(<span class="hljs-string">'isSet'</span>);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>is || isSet</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasIs</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">return</span> value.hasOwnProperty(<span class="hljs-string">'is'</span>) || value.hasOwnProperty(<span class="hljs-string">'isSet'</span>);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To easily camel case our generated functions :)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-built_in">String</span>.prototype.capitaliseFirstLetter = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitaliseFirstLetter</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.charAt(<span class="hljs-number">0</span>).toUpperCase() + <span class="hljs-keyword">this</span>.slice(<span class="hljs-number">1</span>);
+  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Publish the module to the available source.</p></div></div><div class="code"><div class="wrapper">  window.enofjs = {
+    clazz: clazz
+  };
+}());</div></div></div></div></body></html>
