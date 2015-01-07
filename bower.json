@@ -1,31 +1,31 @@
 {
-    "name": "enofjs",
-    "version": "3.2.0",
-    "main": "src/enofjs",
-    "devDependencies": {
-        "jasmine": "^2.0",
-        "requirejs": "~2.1.15"
-    },
-    "homepage": "http://enof.github.io/EnoFJS/",
-    "authors": [
-        "(Andy Tang)"
-    ],
-    "description": "Enhancing javascript",
-    "keywords": [
-        "enof",
-        "enofjs",
-        "inheritance",
-        "linkedHashMap",
-        "protected",
-        "super",
-        "whereIt"
-    ],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ]
+  "name": "enofjs",
+  "version": "4.0.0",
+  "main": "src/enofjs",
+  "devDependencies": {
+    "jasmine": "^2.0",
+    "requirejs": "~2.1.15"
+  },
+  "homepage": "http://enof.github.io/EnoFJS/",
+  "authors": [
+    "(Andy Tang)"
+  ],
+  "description": "Enhancing javascript",
+  "keywords": [
+    "enof",
+    "enofjs",
+    "inheritance",
+    "linkedHashMap",
+    "protected",
+    "super",
+    "whereIt"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
